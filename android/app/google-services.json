@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "41601937528",
+    "project_id": "khata-kapi-75249",
+    "storage_bucket": "khata-kapi-75249.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41601937528:android:e11d841ea7b09ec8efbd8d",
+        "android_client_info": {
+          "package_name": "com.example.khatakapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "41601937528-dnbeo12c3nuqbmnmqdtieb5rfkctrrrn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkK48ueApkjsVclhB9g8HdJtpu9thvxTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "41601937528-dnbeo12c3nuqbmnmqdtieb5rfkctrrrn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
