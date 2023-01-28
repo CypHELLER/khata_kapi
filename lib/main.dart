@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.cyan,
       ),
       home: AnimatedSplashScreen(
-        splash: Image.asset('images/logo.png'),
+        splash: Image.asset('assets/images/logo.png'),
         duration: 2100,
         splashTransition: SplashTransition.fadeTransition,
         backgroundColor: Color.fromARGB(255, 142, 234, 125),

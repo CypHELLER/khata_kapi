@@ -23,7 +23,7 @@ class _LoginNepState extends State<LoginNep> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/background_image2.JPG'),
+            image: AssetImage('assets/images/background_image2.JPG'),
             fit: BoxFit.cover,
           ),
         ),
@@ -33,7 +33,7 @@ class _LoginNepState extends State<LoginNep> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'images/logo.png',
+                'assets/images/logo.png',
                 width: 150,
                 height: 150,
               ),

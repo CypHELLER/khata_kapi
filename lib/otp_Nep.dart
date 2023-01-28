@@ -55,7 +55,7 @@ class _OtpNepState extends State<OtpNep> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/background_image3.JPG'),
+            image: AssetImage('assets/images/background_image3.JPG'),
             fit: BoxFit.cover,
           ),
         ),
@@ -65,7 +65,7 @@ class _OtpNepState extends State<OtpNep> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'images/logo.png',
+                'assets/images/logo.png',
                 width: 150,
                 height: 150,
               ),
