@@ -23,7 +23,7 @@ class _LoginEngState extends State<LoginEng> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/background_image2.JPG'),
+            image: AssetImage('assets/images/background_image2.JPG'),
             fit: BoxFit.cover,
           ),
         ),
@@ -33,7 +33,7 @@ class _LoginEngState extends State<LoginEng> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'images/logo.png',
+                'assets/images/logo.png',
                 width: 150,
                 height: 150,
               ),
@@ -48,7 +48,7 @@ class _LoginEngState extends State<LoginEng> {
                 height: 10,
               ),
               const Text(
-                "We need to register your phone without getting started!",
+                "We need to register your phone before getting started!",
                 style: TextStyle(
                   fontSize: 16,
                 ),

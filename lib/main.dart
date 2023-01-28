@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'language.dart';
 
 
-void main() => runApp(const MyApp());
+void main(){
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
+  }
 
 
 class MyApp extends StatelessWidget {
@@ -21,7 +24,7 @@ class MyApp extends StatelessWidget {
         splash: Image.asset('images/logo.png'),
         duration: 2100,
         splashTransition: SplashTransition.fadeTransition,
-        backgroundColor: const Color.fromARGB(255, 103, 82, 82),
+        backgroundColor: Color.fromARGB(255, 142, 234, 125),
         nextScreen: const Language(),
       ),
     );

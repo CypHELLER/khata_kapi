@@ -16,7 +16,7 @@ class _LanguageState extends State<Language> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('images/background_image1.JPG'),
+          image: AssetImage('assets/images/background_image1.JPG'),
           fit: BoxFit.cover,
         ),
       ),
@@ -41,7 +41,7 @@ class _LanguageState extends State<Language> {
               ),
             ),
             Image.asset(
-              'images/logo.png',
+              'assets/images/logo.png',
               height: 300,
               width: 200,
               fit: BoxFit.fitWidth,

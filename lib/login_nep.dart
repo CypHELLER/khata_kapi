@@ -13,7 +13,7 @@ class _LoginNepState extends State<LoginNep> {
 
   @override
   void initState() {
-    countryController.text = "+977";
+    countryController.text = "+९७७";
     super.initState();
   }
 
