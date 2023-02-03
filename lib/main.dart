@@ -1,5 +1,6 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'language.dart';
 
 
@@ -16,6 +17,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates:const [
+        GlobalMaterialLocalizations.delegate,
+       ],
+       supportedLocales: const [
+        Locale('en'),
+        Locale('ne'),
+        ],
       theme: ThemeData(
         primarySwatch: Colors.cyan,
         scaffoldBackgroundColor: Colors.cyan,
