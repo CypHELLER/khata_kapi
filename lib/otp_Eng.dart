@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-
 import 'home.dart';
+import 'login_eng.dart';
 
 class OtpEng extends StatefulWidget {
   const OtpEng({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class OtpEng extends StatefulWidget {
 }
 
 class _OtpEngState extends State<OtpEng> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
@@ -37,6 +39,7 @@ class _OtpEngState extends State<OtpEng> {
       ),
     );
 
+    var code = "";
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -91,8 +94,10 @@ class _OtpEngState extends State<OtpEng> {
               ),
               Pinput(
                 length: 6,
-
                 showCursor: true,
+                onChanged: (value) {
+                  code = value;
+                },
                 onCompleted: (pin) => print(pin),
               ),
               const SizedBox(
@@ -106,14 +111,23 @@ class _OtpEngState extends State<OtpEng> {
                       primary: Colors.green.shade600,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Home(),
-                      ),
-                    );
-                   },
+                  onPressed: () async {
+                    try{
+                    PhoneAuthCredential credential =
+                        PhoneAuthProvider.credential(
+                            verificationId: LoginEng.verify, smsCode: code);
+
+                    // Sign the user in (or link) with the credential
+                    await auth.signInWithCredential(credential);
+                    Navigator.push(context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          ),
+                        );
+                    }catch(exp){
+                      print('Invalid OTP number!');
+                     }
+                  },
                   child: const Text(
                     "Verify Phone Number",
                     style: TextStyle(color: Colors.white),
@@ -123,7 +137,7 @@ class _OtpEngState extends State<OtpEng> {
               Row(
                 children: [
                   TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           'phone',

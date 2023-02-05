@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'language.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:khatakapi/home.dart';
+import 'package:khatakapi/language.dart';
+import 'firebase_options.dart';
 
 
-void main(){
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+   );
+  
+   runApp(const MyApp());
   }
 
 
@@ -17,13 +23,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      localizationsDelegates:const [
-        GlobalMaterialLocalizations.delegate,
-       ],
-       supportedLocales: const [
-        Locale('en'),
-        Locale('ne'),
-        ],
       theme: ThemeData(
         primarySwatch: Colors.cyan,
         scaffoldBackgroundColor: Colors.cyan,
@@ -32,13 +31,12 @@ class MyApp extends StatelessWidget {
         splash: Image.asset('assets/images/logo.png'),
         duration: 2100,
         splashTransition: SplashTransition.fadeTransition,
-        backgroundColor: Color.fromARGB(255, 142, 234, 125),
+        backgroundColor: const Color.fromARGB(255, 142, 234, 125),
         nextScreen: const Language(),
       ),
     );
   }
 }
-
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
 

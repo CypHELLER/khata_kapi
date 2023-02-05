@@ -102,8 +102,6 @@ class _LanguageState extends State<Language> {
                   ),
                 ),
                 onPressed: () {
-                  backgroundColor: Colors.grey;
-                  duration: 2000;
                   Navigator.push(
                     context,
                     MaterialPageRoute(

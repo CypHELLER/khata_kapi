@@ -1,15 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'otp_Eng.dart';
 
 class LoginEng extends StatefulWidget {
   const LoginEng({super.key});
 
+  static String verify = "";
   @override
   State<LoginEng> createState() => _LoginEngState();
 }
 
 class _LoginEngState extends State<LoginEng> {
   TextEditingController countryController = TextEditingController();
+  var number = "";
 
   @override
   void initState() {
@@ -86,10 +89,13 @@ class _LoginEngState extends State<LoginEng> {
                     const SizedBox(
                       width: 10,
                     ),
-                    const Expanded(
+                    Expanded(
                         child: TextField(
                       keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
+                      onChanged: (value) {
+                        number = value;
+                      },
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Phone",
                       ),
@@ -97,7 +103,7 @@ class _LoginEngState extends State<LoginEng> {
                   ],
                 ),
               ),
-               const SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               SizedBox(
@@ -108,12 +114,22 @@ class _LoginEngState extends State<LoginEng> {
                       primary: Colors.green.shade600,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const OtpEng(),
-                      ),
+                  onPressed: () async {
+                    await FirebaseAuth.instance.verifyPhoneNumber(
+                      phoneNumber: '${countryController.text + number}',
+                      verificationCompleted:
+                          (PhoneAuthCredential credential) {},
+                      verificationFailed: (FirebaseAuthException e) {},
+                      codeSent: (String verificationId, int? resendToken) {
+                        LoginEng.verify = verificationId;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const OtpEng(),
+                          ),
+                        );
+                      },
+                      codeAutoRetrievalTimeout: (String verificationId) {},
                     );
                   },
                   child: const Text(

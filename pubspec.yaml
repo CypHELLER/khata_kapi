@@ -29,20 +29,21 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  firebase_core: ^2.4.1
+  firebase_auth: ^4.2.5
+  pinput: ^2.2.21
   flutter:
     sdk: flutter 
   animated_splash_screen:
-  pinput: ^2.2.21
-  flutter_localizations: 
-    sdk: flutter
+  
+  
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
   # Firebase Database
   cloud_firestore: ^4.3.1
-  firebase_auth: ^4.2.5
-  intl: ^0.17.0
+
 
 dev_dependencies:
   flutter_test:
