@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.cyan,
-        scaffoldBackgroundColor: Colors.cyan,
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: AnimatedSplashScreen(
         splash: Image.asset('assets/images/logo.png'),

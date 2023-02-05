@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:khatakapi/registration.dart';
 import 'package:pinput/pinput.dart';
-import 'home.dart';
 import 'login_eng.dart';
 
 class OtpEng extends StatefulWidget {
@@ -121,7 +121,7 @@ class _OtpEngState extends State<OtpEng> {
                     await auth.signInWithCredential(credential);
                     Navigator.push(context,
                           MaterialPageRoute(
-                            builder: (context) => const Home(),
+                            builder: (context) => const Registration(),
                           ),
                         );
                     }catch(exp){

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'otp_Eng.dart';
@@ -23,6 +25,40 @@ class _LoginEngState extends State<LoginEng> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+         leading: IconButton(
+          icon: const Icon(
+            Icons.chevron_left_rounded,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OtpEng(),
+              ),
+            );
+          },
+        ),
+        actions: <Widget>[
+          Padding(
+            padding:
+            const EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                exit(0);
+               },
+              child: const Icon(
+                Icons.cancel,
+                size: 26.0,
+                color: Colors.red,
+               ),
+             ),
+           ),
+         ],
+        
+      ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_eng.dart';
@@ -21,26 +23,31 @@ class _LanguageState extends State<Language> {
         ),
       ),
       child: Scaffold(
+        appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        actions: <Widget>[
+          Padding(
+            padding:
+            const EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                exit(0);
+               },
+              child: const Icon(
+                Icons.cancel,
+                size: 26.0,
+                color: Colors.red,
+               ),
+             ),
+           ),
+         ],
+        
+      ),
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                SystemNavigator.pop();
-              },
-              // ignore: sort_child_properties_last
-              child: const Icon(
-                Icons.exit_to_app,
-                color: Colors.white,
-                size: 24,
-              ),
-              style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                padding: const EdgeInsets.all(10),
-                backgroundColor: Colors.red,
-              ),
-            ),
             Image.asset(
+              alignment: Alignment.center,
               'assets/images/logo.png',
               height: 300,
               width: 200,
