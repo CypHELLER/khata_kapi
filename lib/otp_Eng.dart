@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:khatakapi/registration.dart';
@@ -58,7 +59,7 @@ class _OtpEngState extends State<OtpEng> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/background_image3.JPG'),
+            image: AssetImage('assets/images/background_image3.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -111,7 +112,7 @@ class _OtpEngState extends State<OtpEng> {
                       primary: Colors.green.shade600,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  onPressed: () async {
+                  onPressed: ()  async{
                     try{
                     PhoneAuthCredential credential =
                         PhoneAuthProvider.credential(

@@ -55,7 +55,7 @@ class _OtpNepState extends State<OtpNep> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/background_image3.JPG'),
+            image: AssetImage('assets/images/background_image3.png'),
             fit: BoxFit.cover,
           ),
         ),

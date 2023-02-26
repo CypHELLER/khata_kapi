@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 import 'login_eng.dart';
 import 'login_nep.dart';
 
@@ -18,7 +17,7 @@ class _LanguageState extends State<Language> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/background_image1.JPG'),
+          image: AssetImage('assets/images/background_image1.png'),
           fit: BoxFit.cover,
         ),
       ),

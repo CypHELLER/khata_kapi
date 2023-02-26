@@ -23,7 +23,7 @@ class _LoginNepState extends State<LoginNep> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/background_image2.JPG'),
+            image: AssetImage('assets/images/background_image2.png'),
             fit: BoxFit.cover,
           ),
         ),

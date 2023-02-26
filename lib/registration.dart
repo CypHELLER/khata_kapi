@@ -1,6 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/otp_Eng.dart';
+import 'home.dart';
+
+const List<String> list = <String>[
+  'Gender',
+  'Male',
+  'Female',
+  'Other',
+  'Do not want to specify'
+];
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -10,6 +18,8 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
+  String dropdownValue = list.first;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,11 +80,11 @@ class _RegistrationState extends State<Registration> {
             ),
             Container(
               alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 70),
+              margin: const EdgeInsets.only(left: 40, right: 40, top: 70),
               padding: const EdgeInsets.only(left: 20, right: 20),
               height: 54,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: BorderRadius.circular(10),
                 color: Colors.grey[200],
                 boxShadow: const [
                   BoxShadow(
@@ -98,11 +108,49 @@ class _RegistrationState extends State<Registration> {
             ),
             Container(
               alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              margin: const EdgeInsets.only(left: 40, right: 130, top: 20),
               padding: const EdgeInsets.only(left: 20, right: 20),
               height: 54,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+                boxShadow: const [
+                  BoxShadow(
+                      offset: Offset(0, 10),
+                      blurRadius: 50,
+                      color: Color(0xffEEEEEE)),
+                ],
+              ),
+              child: DropdownButton<String>(
+                value: dropdownValue,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                style: const TextStyle(color: Colors.black),
+                underline: Container(
+                  height: 2,
+                  color: Colors.green,
+                ),
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
+                items: list.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(left: 40, right: 240, top: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              height: 54,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
                 color: Colors.grey[200],
                 boxShadow: const [
                   BoxShadow(
@@ -115,12 +163,59 @@ class _RegistrationState extends State<Registration> {
                 cursorColor: Colors.green,
                 decoration: InputDecoration(
                   icon: Icon(
-                    Icons.email,
+                    Icons.person,
                     color: Colors.green,
                   ),
-                  hintText: "Email",
+                  hintText: "Age",
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(
+                  left: 40, right: 40, top: 20, bottom: 10),
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              height: 54,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(primary: Colors.grey[200]),
+                onPressed: () {},
+                icon: const Icon(Icons.add),
+                label: const Text("Image"),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(left: 40, right: 40, top: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              height: 54,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white10,
+                boxShadow: const [
+                  BoxShadow(
+                      offset: Offset(0, 10),
+                      blurRadius: 50,
+                      color: Color(0xffEEEEEE)),
+                ],
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.green.shade600,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Home(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "            Enter            ",
+                  style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
             ),
