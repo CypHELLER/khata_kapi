@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
 
@@ -20,6 +21,16 @@ class Registration extends StatefulWidget {
 class _RegistrationState extends State<Registration> {
   String dropdownValue = list.first;
 
+  var userNameController = new TextEditingController();
+  var userGenderController = new TextEditingController();
+  var userAgeController = new TextEditingController();
+
+  final db = FirebaseDatabase.instance.ref();
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +46,7 @@ class _RegistrationState extends State<Registration> {
                 gradient: LinearGradient(
                   colors: [
                     (Color.fromARGB(255, 148, 121, 163)),
-                    Color.fromARGB(255, 24, 210, 213)
+                    Color.fromARGB(255, 24, 210, 213),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -93,13 +104,15 @@ class _RegistrationState extends State<Registration> {
                       color: Color(0xffEEEEEE)),
                 ],
               ),
-              child: const TextField(
+              child: TextField(
+                controller: userNameController,
                 cursorColor: Colors.green,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   icon: Icon(
                     Icons.person,
                     color: Colors.green,
                   ),
+                  labelText: 'Name',
                   hintText: "Full Name",
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -133,6 +146,7 @@ class _RegistrationState extends State<Registration> {
                 onChanged: (String? value) {
                   // This is called when the user selects an item.
                   setState(() {
+                    //controller : userGenderController;
                     dropdownValue = value!;
                   });
                 },
@@ -146,7 +160,7 @@ class _RegistrationState extends State<Registration> {
             ),
             Container(
               alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 40, right: 240, top: 20),
+              margin: const EdgeInsets.only(left: 40, right: 40, top: 20),
               padding: const EdgeInsets.only(left: 20, right: 20),
               height: 54,
               decoration: BoxDecoration(
@@ -159,13 +173,15 @@ class _RegistrationState extends State<Registration> {
                       color: Color(0xffEEEEEE)),
                 ],
               ),
-              child: const TextField(
+              child: TextField(
+                controller: userAgeController,
                 cursorColor: Colors.green,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   icon: Icon(
                     Icons.person,
                     color: Colors.green,
                   ),
+                  labelText: 'Age',
                   hintText: "Age",
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -206,6 +222,10 @@ class _RegistrationState extends State<Registration> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10))),
                 onPressed: () {
+                  if (userNameController.text.isNotEmpty &&
+                      userAgeController.text.isNotEmpty) {
+                    insertData(userNameController.text, userAgeController.text);
+                  }
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -223,5 +243,14 @@ class _RegistrationState extends State<Registration> {
         ),
       ),
     );
+  }
+
+  void insertData(String name, String age) {
+    db.child("path").set({
+      'name': name,
+      'age': age,
+    });
+    userNameController.clear();
+    userAgeController.clear();
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'otp_Eng.dart';
 
@@ -16,10 +17,12 @@ class _LoginEngState extends State<LoginEng> {
   TextEditingController countryController = TextEditingController();
   var number = "";
 
+  
   @override
   void initState() {
     countryController.text = "+977";
     super.initState();
+    
   }
 
   @override
@@ -27,7 +30,7 @@ class _LoginEngState extends State<LoginEng> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-         leading: IconButton(
+        leading: IconButton(
           icon: const Icon(
             Icons.chevron_left_rounded,
             color: Colors.black,
@@ -43,21 +46,19 @@ class _LoginEngState extends State<LoginEng> {
         ),
         actions: <Widget>[
           Padding(
-            padding:
-            const EdgeInsets.only(right: 20.0),
+            padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {
                 exit(0);
-               },
+              },
               child: const Icon(
                 Icons.cancel,
                 size: 26.0,
                 color: Colors.red,
-               ),
-             ),
-           ),
-         ],
-        
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -158,6 +159,7 @@ class _LoginEngState extends State<LoginEng> {
                       verificationFailed: (FirebaseAuthException e) {},
                       codeSent: (String verificationId, int? resendToken) {
                         LoginEng.verify = verificationId;
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
