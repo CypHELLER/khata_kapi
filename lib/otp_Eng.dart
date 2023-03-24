@@ -1,6 +1,6 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:khatakapi/home.dart';
 import 'package:khatakapi/registration.dart';
 import 'package:pinput/pinput.dart';
 import 'login_eng.dart';
@@ -112,22 +112,30 @@ class _OtpEngState extends State<OtpEng> {
                       primary: Colors.green.shade600,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  onPressed: ()  async{
-                    try{
-                    PhoneAuthCredential credential =
-                        PhoneAuthProvider.credential(
-                            verificationId: LoginEng.verify, smsCode: code);
+                  onPressed: () async {
+                    try {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const Home(),
+                      //   ),
+                      // );
+                      PhoneAuthCredential credential =
+                          PhoneAuthProvider.credential(
+                              verificationId: LoginEng.verify, smsCode: code);
 
-                    // Sign the user in (or link) with the credential
-                    await auth.signInWithCredential(credential);
-                    Navigator.push(context,
-                          MaterialPageRoute(
-                            builder: (context) => const Registration(),
-                          ),
-                        );
-                    }catch(exp){
+                      // Sign the user in (or link) with the credential
+                      await auth.signInWithCredential(credential);
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Registration(),
+                        ),
+                      );
+                    } catch (exp) {
                       print('Invalid OTP number!');
-                     }
+                    }
                   },
                   child: const Text(
                     "Verify Phone Number",
