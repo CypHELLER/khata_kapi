@@ -1,23 +1,26 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:khatakapi/home.dart';
 
-const List<String> list1 = <String>["Party Type", "Customer", "Supplier"];
-const List<String> list2 = <String>[
-  "Transaction Type",
-  "To Give",
-  "To Receive"
+const List<String> billType = <String>[
+  "Select Expense Type",
+  "Health",
+  "Food",
+  "Recharge",
+  "Fuel",
+  "Shopping",
+  "Travel"
 ];
 
-class NewParty extends StatefulWidget {
-  const NewParty({super.key});
+class Expense extends StatefulWidget {
+  const Expense({super.key});
 
   @override
-  State<NewParty> createState() => _NewPartyState();
+  State<Expense> createState() => _ExpenseState();
 }
 
-class _NewPartyState extends State<NewParty> {
-  String dropdownvalue = list1.first;
-  String dropdownvalue1 = list2.first;
+class _ExpenseState extends State<Expense> {
+  String dropdownvalue = billType.first;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +36,7 @@ class _NewPartyState extends State<NewParty> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.person,
+              Icons.currency_rupee,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -45,19 +48,13 @@ class _NewPartyState extends State<NewParty> {
         padding: const EdgeInsets.only(left: 16, top: 20, right: 16),
         child: ListView(
           children: [
-            const SizedBox(
-              height: 10,
-            ),
             const Text(
-              "Add New Party",
+              "Add Expenses",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
               height: 30,
             ),
-            text_field("Full Name", ""),
-            text_field("Phone", ""),
-            text_field("Address", ""),
             Container(
               padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
               child: DropdownButtonHideUnderline(
@@ -76,7 +73,8 @@ class _NewPartyState extends State<NewParty> {
                         dropdownvalue = value!;
                       });
                     },
-                    items: list1.map<DropdownMenuItem<String>>((String value) {
+                    items:
+                        billType.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -86,36 +84,10 @@ class _NewPartyState extends State<NewParty> {
                 ),
               ),
             ),
-            text_field("Opening Balance Rs.", ""),
+            text_field("Amount Rs.", ""),
+            text_field("Remarks", ""),
             text_field("Date", "year/month/day"),
-            Container(
-              padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
-              child: DropdownButtonHideUnderline(
-                child: Container(
-                  constraints: const BoxConstraints(minHeight: 50),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.green, width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: DropdownButton(
-                    value: dropdownvalue1,
-                    onChanged: (String? value) {
-                      setState(() {
-                        dropdownvalue1 = value!;
-                      });
-                    },
-                    items: list2.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ),
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -144,9 +116,6 @@ class _NewPartyState extends State<NewParty> {
                       ),
                     ), //label text
                   ),
-                ),
-                const SizedBox(
-                  height: 35,
                 ),
                 SizedBox(
                   width: 150,

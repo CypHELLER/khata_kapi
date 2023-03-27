@@ -1,23 +1,22 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:khatakapi/home.dart';
 
-const List<String> list1 = <String>["Party Type", "Customer", "Supplier"];
-const List<String> list2 = <String>[
-  "Transaction Type",
-  "To Give",
-  "To Receive"
+const List<String> billType = <String>[
+  "Select Bill Type",
+  "Cash Sale",
+  "Credit"
 ];
 
-class NewParty extends StatefulWidget {
-  const NewParty({super.key});
+class PurchaseReturn extends StatefulWidget {
+  const PurchaseReturn({super.key});
 
   @override
-  State<NewParty> createState() => _NewPartyState();
+  State<PurchaseReturn> createState() => _PurchaseReturnState();
 }
 
-class _NewPartyState extends State<NewParty> {
-  String dropdownvalue = list1.first;
-  String dropdownvalue1 = list2.first;
+class _PurchaseReturnState extends State<PurchaseReturn> {
+  String dropdownvalue = billType.first;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +32,7 @@ class _NewPartyState extends State<NewParty> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.person,
+              Icons.shopping_cart_checkout,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -45,19 +44,15 @@ class _NewPartyState extends State<NewParty> {
         padding: const EdgeInsets.only(left: 16, top: 20, right: 16),
         child: ListView(
           children: [
-            const SizedBox(
-              height: 10,
-            ),
             const Text(
-              "Add New Party",
+              "Purchase Return Bill",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
               height: 30,
             ),
-            text_field("Full Name", ""),
-            text_field("Phone", ""),
-            text_field("Address", ""),
+            text_field("Bill No.", ""),
+            text_field("Date", "year/month/day"),
             Container(
               padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
               child: DropdownButtonHideUnderline(
@@ -76,7 +71,8 @@ class _NewPartyState extends State<NewParty> {
                         dropdownvalue = value!;
                       });
                     },
-                    items: list1.map<DropdownMenuItem<String>>((String value) {
+                    items:
+                        billType.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -86,35 +82,42 @@ class _NewPartyState extends State<NewParty> {
                 ),
               ),
             ),
-            text_field("Opening Balance Rs.", ""),
-            text_field("Date", "year/month/day"),
+            AnimatedButton(
+              text: "Add Item",
+              color: Colors.green,
+              pressEvent: () {
+                AwesomeDialog(
+                    padding: const EdgeInsets.only(
+                        left: 30, bottom: 35.0, right: 30),
+                    context: context,
+                    dialogType: DialogType.warning,
+                    animType: AnimType.topSlide,
+                    showCloseIcon: true,
+                    title: "Warning",
+                    desc: "Item Added",
+                    btnCancelOnPress: () {},
+                    btnOkOnPress: () {});
+              },
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            text_field("Total Bill Rs.", ""),
+            text_field("Remarks", ""),
             Container(
-              padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
-              child: DropdownButtonHideUnderline(
-                child: Container(
-                  constraints: const BoxConstraints(minHeight: 50),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.green, width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: DropdownButton(
-                    value: dropdownvalue1,
-                    onChanged: (String? value) {
-                      setState(() {
-                        dropdownvalue1 = value!;
-                      });
-                    },
-                    items: list2.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(left: 40, right: 40),
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              height: 54,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(primary: Colors.grey[200]),
+                onPressed: () {},
+                icon: const Icon(Icons.add),
+                label: const Text("Images"),
               ),
+            ),
+            const SizedBox(
+              height: 30,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,9 +147,6 @@ class _NewPartyState extends State<NewParty> {
                       ),
                     ), //label text
                   ),
-                ),
-                const SizedBox(
-                  height: 35,
                 ),
                 SizedBox(
                   width: 150,

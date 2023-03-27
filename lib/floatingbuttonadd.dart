@@ -2,6 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:khatakapi/addItem.dart';
 import 'package:khatakapi/addNewParty.dart';
+import 'package:khatakapi/expense.dart';
+import 'package:khatakapi/purchase.dart';
+import 'package:khatakapi/purchaseReturn.dart';
+import 'package:khatakapi/sales.dart';
+import 'package:khatakapi/salesReturn.dart';
 
 class AddButton extends StatefulWidget {
   const AddButton({super.key});
@@ -121,7 +126,14 @@ class _AddButtonState extends State<AddButton> {
                             primary: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PurchaseItem(),
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.shopping_cart,
                             color: Colors.white),
 
@@ -144,7 +156,14 @@ class _AddButtonState extends State<AddButton> {
                             primary: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SalesItem(),
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.sell, color: Colors.white),
 
                         label: const Text(
@@ -166,7 +185,14 @@ class _AddButtonState extends State<AddButton> {
                             primary: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PurchaseReturn(),
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.shopping_cart_checkout,
                             color: Colors.white),
 
@@ -189,7 +215,14 @@ class _AddButtonState extends State<AddButton> {
                             primary: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SalesReturn(),
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.outbox, color: Colors.white),
 
                         label: const Text(
@@ -211,7 +244,14 @@ class _AddButtonState extends State<AddButton> {
                             primary: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                           Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Expense(),
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.currency_rupee,
                             color: Colors.white),
 

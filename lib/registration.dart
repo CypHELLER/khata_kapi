@@ -34,6 +34,29 @@ class _RegistrationState extends State<Registration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.skip_next,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                ),
+              );
+            },
+          )
+        ],
+        backgroundColor: Color.fromARGB(255, 148, 121, 163),
+      ),   
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -57,19 +80,6 @@ class _RegistrationState extends State<Registration> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        exit(0);
-                      },
-                      child: const Icon(
-                        Icons.cancel,
-                        size: 35.0,
-                        color: Colors.amber,
-                      ),
-                    ),
-                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 50),
                     child: Image.asset(

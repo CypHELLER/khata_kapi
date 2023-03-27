@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:khatakapi/registration.dart';
 import 'package:pinput/pinput.dart';
 
 import 'home.dart';
@@ -105,7 +106,7 @@ class _OtpNepState extends State<OtpNep> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Home(),
+                        builder: (context) => const Registration(),
                       ),
                     );
                    },
