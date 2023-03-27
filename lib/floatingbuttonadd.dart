@@ -1,6 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:khatakapi/addItem.dart';
+import 'package:khatakapi/addNewParty.dart';
 
 class AddButton extends StatefulWidget {
   const AddButton({super.key});
@@ -22,7 +23,7 @@ class _AddButtonState extends State<AddButton> {
           "assets/images/logo.png",
           width: 80,
         ),
-        backgroundColor: Color.fromARGB(255, 148, 121, 163),
+        backgroundColor: const Color.fromARGB(255, 148, 121, 163),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -61,7 +62,14 @@ class _AddButtonState extends State<AddButton> {
                             primary: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NewParty(),
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.person, color: Colors.white),
 
                         label: const Text(
@@ -83,7 +91,14 @@ class _AddButtonState extends State<AddButton> {
                             primary: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddItem(),
+                            ),
+                          );
+                        },
                         icon:
                             const Icon(Icons.inventory_2, color: Colors.white),
 

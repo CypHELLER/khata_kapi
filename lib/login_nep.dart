@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:khatakapi/home.dart';
 import 'otp_Nep.dart';
 
 class LoginNep extends StatefulWidget {
@@ -19,7 +20,30 @@ class _LoginNepState extends State<LoginNep> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(  
+       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.skip_next,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                ),
+              );
+            },
+          )
+        ],
+        backgroundColor: Color.fromARGB(255, 148, 121, 163),
+      ),   
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -29,13 +53,14 @@ class _LoginNepState extends State<LoginNep> {
         ),
         alignment: Alignment.center,
         child: SingleChildScrollView(
-          child: Column(
+           padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
+          child: Column(                     
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
                 'assets/images/logo.png',
                 width: 150,
-                height: 150,
+                height: 120,
               ),
               const SizedBox(
                 height: 25,
@@ -58,6 +83,7 @@ class _LoginNepState extends State<LoginNep> {
                 height: 30,
               ),
               Container(
+                
                 height: 55,
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: Colors.grey),

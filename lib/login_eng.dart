@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:khatakapi/home.dart';
 import 'otp_Eng.dart';
 
 class LoginEng extends StatefulWidget {
@@ -26,39 +27,31 @@ class _LoginEngState extends State<LoginEng> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
+appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(
-            Icons.chevron_left_rounded,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const OtpEng(),
-              ),
-            );
-          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                exit(0);
-              },
-              child: const Icon(
-                Icons.cancel,
-                size: 26.0,
-                color: Colors.red,
-              ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.skip_next,
+              color: Colors.white,
             ),
-          ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                ),
+              );
+            },
+          )
         ],
-      ),
+        backgroundColor: Color.fromARGB(255, 148, 121, 163),
+      ),   
       body: Container(
+         padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/background_image2.png'),

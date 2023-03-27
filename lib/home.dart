@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:khatakapi/editprofile.dart';
 import 'package:khatakapi/floatingbuttonadd.dart';
-import 'package:khatakapi/settings.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -45,9 +45,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   exit(0);
                 },
                 child: const Icon(
-                  Icons.cancel,
+                  Icons.language,
                   size: 26.0,
-                  color: Colors.amberAccent,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -126,6 +126,25 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 // tileColor:  Color.fromARGB(255, 24, 210, 213),
                 // textColor: Colors.white,
                 leading: const Icon(
+                  Icons.edit,
+                ),
+                title: const Text(
+                  'Edit Profile',
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfile(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                iconColor: Color.fromARGB(255, 148, 121, 163),
+                // tileColor:  Color.fromARGB(255, 24, 210, 213),
+                // textColor: Colors.white,
+                leading: const Icon(
                   Icons.settings,
                 ),
                 title: const Text(
@@ -135,7 +154,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Settings(),
+                      builder: (context) => const EditProfile(),
+                    ),
+                  );
+                },
+              ),
+               ListTile(
+                iconColor: Color.fromARGB(255, 148, 121, 163),
+                // tileColor:  Color.fromARGB(255, 24, 210, 213),
+                // textColor: Colors.white,
+                leading: const Icon(
+                  Icons.info_rounded,
+                ),
+                title: const Text(
+                  'About',
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfile(),
                     ),
                   );
                 },

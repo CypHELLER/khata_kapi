@@ -44,17 +44,12 @@ class _OtpEngState extends State<OtpEng> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Colors.green,
-          ),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
         ),
         elevation: 0,
+         backgroundColor: Color.fromARGB(255, 148, 121, 163),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -65,6 +60,7 @@ class _OtpEngState extends State<OtpEng> {
         ),
         alignment: Alignment.center,
         child: SingleChildScrollView(
+           padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
