@@ -1,7 +1,7 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
 
+import '../Dashbord/home.dart';
+import 'addPurchasereturnItem.dart';
 const List<String> billType = <String>[
   "Select Bill Type",
   "Cash Sale",
@@ -82,22 +82,30 @@ class _PurchaseReturnState extends State<PurchaseReturn> {
                 ),
               ),
             ),
-            AnimatedButton(
-              text: "Add Item",
-              color: Colors.green,
-              pressEvent: () {
-                AwesomeDialog(
-                    padding: const EdgeInsets.only(
-                        left: 30, bottom: 35.0, right: 30),
-                    context: context,
-                    dialogType: DialogType.warning,
-                    animType: AnimType.topSlide,
-                    showCloseIcon: true,
-                    title: "Warning",
-                    desc: "Item Added",
-                    btnCancelOnPress: () {},
-                    btnOkOnPress: () {});
-              },
+                       Container(
+              padding: const EdgeInsets.only(right: 25.0, left: 25.0),
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5))),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddPurchasereturnItem(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.inventory, color: Colors.white),
+
+                label: const Text(
+                  "Add Item",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ), //label text
+              ),
             ),
             const SizedBox(
               height: 30,

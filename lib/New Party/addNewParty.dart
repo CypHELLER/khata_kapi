@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
+
+import '../Dashbord/home.dart';
 
 const List<String> list1 = <String>["Party Type", "Customer", "Supplier"];
 const List<String> list2 = <String>[

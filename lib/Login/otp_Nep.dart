@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:khatakapi/registration.dart';
+import 'package:khatakapi/Login/registration.dart';
 import 'package:pinput/pinput.dart';
-
-import 'home.dart';
 
 class OtpNep extends StatefulWidget {
   const OtpNep({Key? key}) : super(key: key);
@@ -46,7 +44,7 @@ class _OtpNepState extends State<OtpNep> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         elevation: 0,
-         backgroundColor: Color.fromARGB(255, 148, 121, 163),
+         backgroundColor: const Color.fromARGB(255, 148, 121, 163),
       ),
       body: Container(
         decoration: const BoxDecoration(

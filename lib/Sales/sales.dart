@@ -1,33 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
 
-const List<String> itemCategory = <String>[
-  "Select Item Category",
-  "Product",
-  "Service"
-];
-const List<String> itemUnit = <String>[
-  "Select Item Unit",
-  "KG",
-  "Piece",
-  "Liter",
-  "Box",
-  "Dozen",
-  "Can",
-  "Meter",
-  "Pack"
+import '../Dashbord/home.dart';
+import 'addSaleItem.dart';
+
+const List<String> billType = <String>[
+  "Select Bill Type",
+  "Cash Sale",
+  "Credit"
 ];
 
-class AddItem extends StatefulWidget {
-  const AddItem({super.key});
+class SalesItem extends StatefulWidget {
+  const SalesItem({super.key});
 
   @override
-  State<AddItem> createState() => _AddItemState();
+  State<SalesItem> createState() => _SalesItemState();
 }
 
-class _AddItemState extends State<AddItem> {
-  String dropdownvalue1 = itemCategory.first;
-  String dropdownvalue2 = itemUnit.first;
+class _SalesItemState extends State<SalesItem> {
+  String dropdownvalue = billType.first;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +33,7 @@ class _AddItemState extends State<AddItem> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.inventory_2,
+              Icons.sell,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -56,13 +46,14 @@ class _AddItemState extends State<AddItem> {
         child: ListView(
           children: [
             const Text(
-              "Add New Item",
+              "Sales Bill",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
               height: 30,
             ),
-            text_field("Item Name", ""),
+            text_field("Bill No.", ""),
+            text_field("Date", "year/month/day"),
             Container(
               padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
               child: DropdownButtonHideUnderline(
@@ -75,43 +66,14 @@ class _AddItemState extends State<AddItem> {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: DropdownButton(
-                    value: dropdownvalue1,
+                    value: dropdownvalue,
                     onChanged: (String? value) {
                       setState(() {
-                        dropdownvalue1 = value!;
-                      });
-                    },
-                    items: itemCategory
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
-              child: DropdownButtonHideUnderline(
-                child: Container(
-                  constraints: const BoxConstraints(minHeight: 50),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.green, width: 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: DropdownButton(
-                    value: dropdownvalue2,
-                    onChanged: (String? value) {
-                      setState(() {
-                        dropdownvalue2 = value!;
+                        dropdownvalue = value!;
                       });
                     },
                     items:
-                        itemUnit.map<DropdownMenuItem<String>>((String value) {
+                        billType.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -121,13 +83,51 @@ class _AddItemState extends State<AddItem> {
                 ),
               ),
             ),
-            text_field("Selling Price Rs.", ""),
-            text_field("Purchase Price Rs.", ""),
-            text_field("Stock Quantity", ""),
-            text_field("Date", "year/month/day"),
-            text_field("Item Code", ""),
-            text_field("Item Location", ""),
+            Container(
+              padding: const EdgeInsets.only(right: 25.0, left: 25.0),
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5))),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddSaleItem(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.inventory, color: Colors.white),
+
+                label: const Text(
+                  "Add Item",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ), //label text
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            text_field("Total Bill Rs.", ""),
             text_field("Remarks", ""),
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(left: 40, right: 40),
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              height: 54,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(primary: Colors.grey[200]),
+                onPressed: () {},
+                icon: const Icon(Icons.add),
+                label: const Text("Images"),
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -186,8 +186,7 @@ class _AddItemState extends State<AddItem> {
               ],
             ),
             const SizedBox(
-              height: 35,
-              width: 30,
+              height: 30,
             ),
           ],
         ),

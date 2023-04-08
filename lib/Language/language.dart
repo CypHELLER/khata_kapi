@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';
-import 'login_eng.dart';
-import 'login_nep.dart';
+
+import '../Login/login_eng.dart';
+import '../Login/login_nep.dart';
 
 class Language extends StatefulWidget {
   const Language({super.key});

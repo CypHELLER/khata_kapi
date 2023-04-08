@@ -1,22 +1,34 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
 
-const List<String> billType = <String>[
-  "Select Bill Type",
-  "Cash Sale",
-  "Credit"
+import '../Dashbord/home.dart';
+
+const List<String> itemCategory = <String>[
+  "Select Item Category",
+  "Product",
+  "Service"
+];
+const List<String> itemUnit = <String>[
+  "Select Item Unit",
+  "KG",
+  "Piece",
+  "Liter",
+  "Box",
+  "Dozen",
+  "Can",
+  "Meter",
+  "Pack"
 ];
 
-class PurchaseItem extends StatefulWidget {
-  const PurchaseItem({super.key});
+class AddNewItem extends StatefulWidget {
+  const AddNewItem({super.key});
 
   @override
-  State<PurchaseItem> createState() => _PurchaseItemState();
+  State<AddNewItem> createState() => _AddNewItemState();
 }
 
-class _PurchaseItemState extends State<PurchaseItem> {
-  String dropdownvalue = billType.first;
+class _AddNewItemState extends State<AddNewItem> {
+  String dropdownvalue1 = itemCategory.first;
+  String dropdownvalue2 = itemUnit.first;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +44,7 @@ class _PurchaseItemState extends State<PurchaseItem> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.shopping_cart,
+              Icons.inventory_2,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -45,14 +57,13 @@ class _PurchaseItemState extends State<PurchaseItem> {
         child: ListView(
           children: [
             const Text(
-              "Purchase Bill",
+              "Add New Item",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
               height: 30,
             ),
-            text_field("Bill No.", ""),
-            text_field("Date", "year/month/day"),
+            text_field("Item Name", ""),
             Container(
               padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
               child: DropdownButtonHideUnderline(
@@ -65,14 +76,14 @@ class _PurchaseItemState extends State<PurchaseItem> {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: DropdownButton(
-                    value: dropdownvalue,
+                    value: dropdownvalue1,
                     onChanged: (String? value) {
                       setState(() {
-                        dropdownvalue = value!;
+                        dropdownvalue1 = value!;
                       });
                     },
-                    items:
-                        billType.map<DropdownMenuItem<String>>((String value) {
+                    items: itemCategory
+                        .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -82,43 +93,42 @@ class _PurchaseItemState extends State<PurchaseItem> {
                 ),
               ),
             ),
-            AnimatedButton(
-              text: "Add Item",
-              color: Colors.green,
-              pressEvent: () {
-                AwesomeDialog(
-                    padding: const EdgeInsets.only(
-                        left: 30, bottom: 35.0, right: 30),
-                    context: context,
-                    dialogType: DialogType.warning,
-                    animType: AnimType.topSlide,
-                    showCloseIcon: true,
-                    title: "Warning",
-                    desc: "Item Added",
-                    btnCancelOnPress: () {},
-                    btnOkOnPress: () {});
-              },
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            text_field("Total Bill Rs.", ""),
-            text_field("Remarks", ""),
             Container(
-              alignment: Alignment.centerLeft,
-              margin: const EdgeInsets.only(left: 40, right: 40),
-              padding: const EdgeInsets.only(left: 5, right: 5),
-              height: 54,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(primary: Colors.grey[200]),
-                onPressed: () {},
-                icon: const Icon(Icons.add),
-                label: const Text("Images"),
+              padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
+              child: DropdownButtonHideUnderline(
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 50),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green, width: 1),
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    color: Colors.white,
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: DropdownButton(
+                    value: dropdownvalue2,
+                    onChanged: (String? value) {
+                      setState(() {
+                        dropdownvalue2 = value!;
+                      });
+                    },
+                    items:
+                        itemUnit.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ),
             ),
-            const SizedBox(
-              height: 30,
-            ),
+            text_field("Selling Price Rs.", ""),
+            text_field("Purchase Price Rs.", ""),
+            text_field("Stock Quantity", ""),
+            text_field("Date", "year/month/day"),
+            text_field("Item Code", ""),
+            text_field("Item Location", ""),
+            text_field("Remarks", ""),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -177,7 +187,8 @@ class _PurchaseItemState extends State<PurchaseItem> {
               ],
             ),
             const SizedBox(
-              height: 30,
+              height: 35,
+              width: 30,
             ),
           ],
         ),

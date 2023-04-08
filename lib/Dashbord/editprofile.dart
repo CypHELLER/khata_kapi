@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
+import 'home.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -20,7 +20,7 @@ class _EditProfileState extends State<EditProfile> {
           "assets/images/logo.png",
           width: 80,
         ),
-        backgroundColor: Color.fromARGB(255, 148, 121, 163),
+        backgroundColor: const Color.fromARGB(255, 148, 121, 163),
         actions: [
           IconButton(
             icon: const Icon(
@@ -32,7 +32,7 @@ class _EditProfileState extends State<EditProfile> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(left: 16, top: 25, right: 16),
+        padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
         child: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -62,11 +62,11 @@ class _EditProfileState extends State<EditProfile> {
                             spreadRadius: 2,
                             blurRadius: 10,
                             color: Colors.black.withOpacity(0.1),
-                            offset: Offset(0, 10),
+                            offset: const Offset(0, 10),
                           ),
                         ],
                         shape: BoxShape.circle,
-                        image: DecorationImage(
+                        image: const DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
                               "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80"),
@@ -179,7 +179,7 @@ class _EditProfileState extends State<EditProfile> {
       child: TextField(
         
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(bottom: 3),                  
+                  contentPadding: const EdgeInsets.only(bottom: 3),                  
                   labelText: labelText,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   hintText: placeholder,

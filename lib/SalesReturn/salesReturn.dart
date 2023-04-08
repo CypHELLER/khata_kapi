@@ -1,6 +1,7 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
+
+import '../Dashbord/home.dart';
+import 'addSalesreturnItem.dart';
 
 const List<String> billType = <String>[
   "Select Bill Type",
@@ -8,14 +9,14 @@ const List<String> billType = <String>[
   "Credit"
 ];
 
-class SalesItem extends StatefulWidget {
-  const SalesItem({super.key});
+class SalesReturn extends StatefulWidget {
+  const SalesReturn({super.key});
 
   @override
-  State<SalesItem> createState() => _SalesItemState();
+  State<SalesReturn> createState() => _SalesReturnState();
 }
 
-class _SalesItemState extends State<SalesItem> {
+class _SalesReturnState extends State<SalesReturn> {
   String dropdownvalue = billType.first;
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class _SalesItemState extends State<SalesItem> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.sell,
+              Icons.outbox,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -45,7 +46,7 @@ class _SalesItemState extends State<SalesItem> {
         child: ListView(
           children: [
             const Text(
-              "Sales Bill",
+              "Sales Return Bill",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
@@ -82,22 +83,30 @@ class _SalesItemState extends State<SalesItem> {
                 ),
               ),
             ),
-            AnimatedButton(
-              text: "Add Item",
-              color: Colors.green,
-              pressEvent: () {
-                AwesomeDialog(
-                    padding: const EdgeInsets.only(
-                        left: 30, bottom: 35.0, right: 30),
-                    context: context,
-                    dialogType: DialogType.warning,
-                    animType: AnimType.topSlide,
-                    showCloseIcon: true,
-                    title: "Warning",
-                    desc: "Item Added",
-                    btnCancelOnPress: () {},
-                    btnOkOnPress: () {});
-              },
+                      Container(
+              padding: const EdgeInsets.only(right: 25.0, left: 25.0),
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5))),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddSalesreturnItem(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.inventory, color: Colors.white),
+
+                label: const Text(
+                  "Add Item",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ), //label text
+              ),
             ),
             const SizedBox(
               height: 30,

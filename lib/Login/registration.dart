@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
+
+import '../Dashbord/home.dart';
 
 const List<String> list = <String>[
   'Gender',
@@ -55,7 +56,7 @@ class _RegistrationState extends State<Registration> {
             },
           )
         ],
-        backgroundColor: Color.fromARGB(255, 148, 121, 163),
+        backgroundColor: const Color.fromARGB(255, 148, 121, 163),
       ),   
       body: SingleChildScrollView(
         child: Column(

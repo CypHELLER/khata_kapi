@@ -1,7 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/editprofile.dart';
-import 'package:khatakapi/floatingbuttonadd.dart';
+
+import 'editprofile.dart';
+import 'floatingbuttonadd.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -18,7 +19,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 260),
+      duration: const Duration(milliseconds: 260),
     );
 
     final curvedAnimation =
@@ -36,13 +37,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             "assets/images/logo.png",
             width: 80,
           ),
-          backgroundColor: Color.fromARGB(255, 148, 121, 163),
+          backgroundColor: const Color.fromARGB(255, 148, 121, 163),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  exit(0);
+                 
                 },
                 child: const Icon(
                   Icons.language,
@@ -80,7 +81,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 currentAccountPicture: FlutterLogo(),
               ),
               ListTile(
-                iconColor: Color.fromARGB(255, 148, 121, 163),
+                iconColor: const Color.fromARGB(255, 148, 121, 163),
                 // tileColor:  Color.fromARGB(255, 24, 210, 213),
                 // textColor: Colors.white,
                 leading: const Icon(
@@ -94,7 +95,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 },
               ),
               ListTile(
-                iconColor: Color.fromARGB(255, 148, 121, 163),
+                iconColor: const Color.fromARGB(255, 148, 121, 163),
                 // tileColor:  Color.fromARGB(255, 24, 210, 213),
                 // textColor: Colors.white,
                 leading: const Icon(
@@ -108,7 +109,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 },
               ),
               ListTile(
-                iconColor: Color.fromARGB(255, 148, 121, 163),
+                iconColor: const Color.fromARGB(255, 148, 121, 163),
                 // tileColor:  Color.fromARGB(255, 24, 210, 213),
                 // textColor: Colors.white,
                 leading: const Icon(
@@ -122,7 +123,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 },
               ),
               ListTile(
-                iconColor: Color.fromARGB(255, 148, 121, 163),
+                iconColor: const Color.fromARGB(255, 148, 121, 163),
                 // tileColor:  Color.fromARGB(255, 24, 210, 213),
                 // textColor: Colors.white,
                 leading: const Icon(
@@ -141,7 +142,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 },
               ),
               ListTile(
-                iconColor: Color.fromARGB(255, 148, 121, 163),
+                iconColor: const Color.fromARGB(255, 148, 121, 163),
                 // tileColor:  Color.fromARGB(255, 24, 210, 213),
                 // textColor: Colors.white,
                 leading: const Icon(
@@ -160,7 +161,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 },
               ),
                ListTile(
-                iconColor: Color.fromARGB(255, 148, 121, 163),
+                iconColor: const Color.fromARGB(255, 148, 121, 163),
                 // tileColor:  Color.fromARGB(255, 24, 210, 213),
                 // textColor: Colors.white,
                 leading: const Icon(

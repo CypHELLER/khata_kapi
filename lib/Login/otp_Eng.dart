@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
-import 'package:khatakapi/registration.dart';
+import 'package:khatakapi/Login/registration.dart';
 import 'package:pinput/pinput.dart';
 import 'login_eng.dart';
 
@@ -49,7 +48,7 @@ class _OtpEngState extends State<OtpEng> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         elevation: 0,
-         backgroundColor: Color.fromARGB(255, 148, 121, 163),
+         backgroundColor: const Color.fromARGB(255, 148, 121, 163),
       ),
       body: Container(
         decoration: const BoxDecoration(

@@ -1,6 +1,7 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
+import 'package:khatakapi/Purchase/addItem.dart';
+
+import '../Dashbord/home.dart';
 
 const List<String> billType = <String>[
   "Select Bill Type",
@@ -8,14 +9,32 @@ const List<String> billType = <String>[
   "Credit"
 ];
 
-class SalesReturn extends StatefulWidget {
-  const SalesReturn({super.key});
+class PurchaseItem extends StatefulWidget {
+  const PurchaseItem({super.key});
 
   @override
-  State<SalesReturn> createState() => _SalesReturnState();
+  State<PurchaseItem> createState() => _PurchaseItemState();
 }
+ Padding text_field(String labelText, String placeholder) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
+      child: TextField(
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.only(bottom: 3),
+          labelText: labelText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: placeholder,
+          hintStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
 
-class _SalesReturnState extends State<SalesReturn> {
+class _PurchaseItemState extends State<PurchaseItem> {
   String dropdownvalue = billType.first;
   @override
   Widget build(BuildContext context) {
@@ -32,7 +51,7 @@ class _SalesReturnState extends State<SalesReturn> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.outbox,
+              Icons.shopping_cart,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -45,7 +64,7 @@ class _SalesReturnState extends State<SalesReturn> {
         child: ListView(
           children: [
             const Text(
-              "Sales Return Bill",
+              "Purchase Bill",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
@@ -82,22 +101,30 @@ class _SalesReturnState extends State<SalesReturn> {
                 ),
               ),
             ),
-            AnimatedButton(
-              text: "Add Item",
-              color: Colors.green,
-              pressEvent: () {
-                AwesomeDialog(
-                    padding: const EdgeInsets.only(
-                        left: 30, bottom: 35.0, right: 30),
-                    context: context,
-                    dialogType: DialogType.warning,
-                    animType: AnimType.topSlide,
-                    showCloseIcon: true,
-                    title: "Warning",
-                    desc: "Item Added",
-                    btnCancelOnPress: () {},
-                    btnOkOnPress: () {});
-              },
+            Container(
+              padding: const EdgeInsets.only(right: 25.0, left: 25.0),
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5))),
+                onPressed: () {
+                  Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddPurchasedItem(),
+                            ),
+                          );
+                },
+                icon: const Icon(Icons.inventory, color: Colors.white),
+
+                label: const Text(
+                  "Add Item",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ), //label text
+              ),
             ),
             const SizedBox(
               height: 30,
@@ -185,22 +212,5 @@ class _SalesReturnState extends State<SalesReturn> {
     );
   }
 
-  Padding text_field(String labelText, String placeholder) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(bottom: 3),
-          labelText: labelText,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: placeholder,
-          hintStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
+ 
 }

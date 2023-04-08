@@ -1,33 +1,27 @@
-import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
-import 'otp_Eng.dart';
+import '../Dashbord/home.dart';
+import 'otp_Nep.dart';
 
-class LoginEng extends StatefulWidget {
-  const LoginEng({super.key});
+class LoginNep extends StatefulWidget {
+  const LoginNep({super.key});
 
-  static String verify = "";
   @override
-  State<LoginEng> createState() => _LoginEngState();
+  State<LoginNep> createState() => _LoginNepState();
 }
 
-class _LoginEngState extends State<LoginEng> {
+class _LoginNepState extends State<LoginNep> {
   TextEditingController countryController = TextEditingController();
-  var number = "";
 
-  
   @override
   void initState() {
-    countryController.text = "+977";
+    countryController.text = "+९७७";
     super.initState();
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-appBar: AppBar(
+    return Scaffold(  
+       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
@@ -48,10 +42,9 @@ appBar: AppBar(
             },
           )
         ],
-        backgroundColor: Color.fromARGB(255, 148, 121, 163),
+        backgroundColor: const Color.fromARGB(255, 148, 121, 163),
       ),   
       body: Container(
-         padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/background_image2.png'),
@@ -60,26 +53,27 @@ appBar: AppBar(
         ),
         alignment: Alignment.center,
         child: SingleChildScrollView(
-          child: Column(
+           padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
+          child: Column(                     
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
                 'assets/images/logo.png',
                 width: 150,
-                height: 150,
+                height: 120,
               ),
               const SizedBox(
                 height: 25,
               ),
               const Text(
-                "Phone Verification",
+                'फोन नम्बर प्रमाणिकरण',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 10,
               ),
               const Text(
-                "We need to register your phone before getting started!",
+                'कृपया  तपाइको फोन नंबर हlल्नुहोस',
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -89,6 +83,7 @@ appBar: AppBar(
                 height: 30,
               ),
               Container(
+                
                 height: 55,
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: Colors.grey),
@@ -117,15 +112,12 @@ appBar: AppBar(
                     const SizedBox(
                       width: 10,
                     ),
-                    Expanded(
+                    const Expanded(
                         child: TextField(
                       keyboardType: TextInputType.phone,
-                      onChanged: (value) {
-                        number = value;
-                      },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: "Phone",
+                        hintText: 'फोन नम्बर',
                       ),
                     ))
                   ],
@@ -139,30 +131,19 @@ appBar: AppBar(
                 height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.green.shade600,
+                      primary: Colors.green,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  onPressed: () async {
-                    await FirebaseAuth.instance.verifyPhoneNumber(
-                      phoneNumber: '${countryController.text + number}',
-                      verificationCompleted:
-                          (PhoneAuthCredential credential) {},
-                      verificationFailed: (FirebaseAuthException e) {},
-                      codeSent: (String verificationId, int? resendToken) {
-                        LoginEng.verify = verificationId;
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const OtpEng(),
-                          ),
-                        );
-                      },
-                      codeAutoRetrievalTimeout: (String verificationId) {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OtpNep(),
+                      ),
                     );
                   },
                   child: const Text(
-                    "Send the code",
+                    'कोड पठाउनुहोस्',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

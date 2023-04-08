@@ -1,27 +1,32 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/home.dart';
-import 'otp_Nep.dart';
+import '../Dashbord/home.dart';
+import 'otp_Eng.dart';
 
-class LoginNep extends StatefulWidget {
-  const LoginNep({super.key});
+class LoginEng extends StatefulWidget {
+  const LoginEng({super.key});
 
+  static String verify = "";
   @override
-  State<LoginNep> createState() => _LoginNepState();
+  State<LoginEng> createState() => _LoginEngState();
 }
 
-class _LoginNepState extends State<LoginNep> {
+class _LoginEngState extends State<LoginEng> {
   TextEditingController countryController = TextEditingController();
+  var number = "";
 
+  
   @override
   void initState() {
-    countryController.text = "+९७७";
+    countryController.text = "+977";
     super.initState();
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(  
-       appBar: AppBar(
+    return Scaffold(
+appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
@@ -42,9 +47,10 @@ class _LoginNepState extends State<LoginNep> {
             },
           )
         ],
-        backgroundColor: Color.fromARGB(255, 148, 121, 163),
+        backgroundColor: const Color.fromARGB(255, 148, 121, 163),
       ),   
       body: Container(
+         padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/background_image2.png'),
@@ -53,27 +59,26 @@ class _LoginNepState extends State<LoginNep> {
         ),
         alignment: Alignment.center,
         child: SingleChildScrollView(
-           padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
-          child: Column(                     
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
                 'assets/images/logo.png',
                 width: 150,
-                height: 120,
+                height: 150,
               ),
               const SizedBox(
                 height: 25,
               ),
               const Text(
-                'फोन नम्बर प्रमाणिकरण',
+                "Phone Verification",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 10,
               ),
               const Text(
-                'कृपया  तपाइको फोन नंबर हlल्नुहोस',
+                "We need to register your phone before getting started!",
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -83,7 +88,6 @@ class _LoginNepState extends State<LoginNep> {
                 height: 30,
               ),
               Container(
-                
                 height: 55,
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: Colors.grey),
@@ -112,12 +116,15 @@ class _LoginNepState extends State<LoginNep> {
                     const SizedBox(
                       width: 10,
                     ),
-                    const Expanded(
+                    Expanded(
                         child: TextField(
                       keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
+                      onChanged: (value) {
+                        number = value;
+                      },
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'फोन नम्बर',
+                        hintText: "Phone",
                       ),
                     ))
                   ],
@@ -131,19 +138,30 @@ class _LoginNepState extends State<LoginNep> {
                 height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
+                      primary: Colors.green.shade600,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const OtpNep(),
-                      ),
+                  onPressed: () async {
+                    await FirebaseAuth.instance.verifyPhoneNumber(
+                      phoneNumber: '${countryController.text + number}',
+                      verificationCompleted:
+                          (PhoneAuthCredential credential) {},
+                      verificationFailed: (FirebaseAuthException e) {},
+                      codeSent: (String verificationId, int? resendToken) {
+                        LoginEng.verify = verificationId;
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const OtpEng(),
+                          ),
+                        );
+                      },
+                      codeAutoRetrievalTimeout: (String verificationId) {},
                     );
                   },
                   child: const Text(
-                    'कोड पठाउनुहोस्',
+                    "Send the code",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

@@ -1,12 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:khatakapi/addItem.dart';
-import 'package:khatakapi/addNewParty.dart';
-import 'package:khatakapi/expense.dart';
-import 'package:khatakapi/purchase.dart';
-import 'package:khatakapi/purchaseReturn.dart';
-import 'package:khatakapi/sales.dart';
-import 'package:khatakapi/salesReturn.dart';
+
+import '../Expense/expense.dart';
+import '../New Item/addNewItem.dart';
+import '../New Party/addNewParty.dart';
+import '../Purchase/purchase.dart';
+import '../PurchaseReturn/purchaseReturn.dart';
+import '../Sales/sales.dart';
+import '../SalesReturn/salesReturn.dart';
 
 class AddButton extends StatefulWidget {
   const AddButton({super.key});
@@ -100,7 +100,7 @@ class _AddButtonState extends State<AddButton> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const AddItem(),
+                              builder: (context) => const AddNewItem(),
                             ),
                           );
                         },
