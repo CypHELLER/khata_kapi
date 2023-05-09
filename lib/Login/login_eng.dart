@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Dashbord/home.dart';
 import 'otp_Eng.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class LoginEng extends StatefulWidget {
   const LoginEng({super.key});
 
@@ -145,7 +145,10 @@ appBar: AppBar(
                     await FirebaseAuth.instance.verifyPhoneNumber(
                       phoneNumber: '${countryController.text + number}',
                       verificationCompleted:
-                          (PhoneAuthCredential credential) {},
+                          (PhoneAuthCredential credential) async{
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            await prefs.setString('phone', number);
+                          },
                       verificationFailed: (FirebaseAuthException e) {},
                       codeSent: (String verificationId, int? resendToken) {
                         LoginEng.verify = verificationId;
