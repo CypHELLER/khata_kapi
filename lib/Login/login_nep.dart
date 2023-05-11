@@ -22,10 +22,6 @@ class _LoginNepState extends State<LoginNep> {
   Widget build(BuildContext context) {
     return Scaffold(  
        appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         actions: [
           IconButton(
             icon: const Icon(

@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:khatakapi/Login/registration.dart';
 import 'package:pinput/pinput.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../Language/language.dart';
 import 'login_eng.dart';
-
 
 class OtpEng extends StatefulWidget {
   const OtpEng({Key? key}) : super(key: key);
@@ -44,12 +45,8 @@ class _OtpEngState extends State<OtpEng> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         elevation: 0,
-         backgroundColor: const Color.fromARGB(255, 148, 121, 163),
+        backgroundColor: const Color.fromARGB(255, 148, 121, 163),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -60,7 +57,7 @@ class _OtpEngState extends State<OtpEng> {
         ),
         alignment: Alignment.center,
         child: SingleChildScrollView(
-           padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
+          padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -110,18 +107,15 @@ class _OtpEngState extends State<OtpEng> {
                           borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
                     try {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const Home(),
-                      //   ),
-                      // );
                       PhoneAuthCredential credential =
                           PhoneAuthProvider.credential(
                               verificationId: LoginEng.verify, smsCode: code);
 
                       // Sign the user in (or link) with the credential
                       await auth.signInWithCredential(credential);
+
+                      var pref = await SharedPreferences.getInstance();
+                      pref.setBool(LanguageState.KEYLOGIN, true);
                       // ignore: use_build_context_synchronously
                       Navigator.push(
                         context,
@@ -142,17 +136,26 @@ class _OtpEngState extends State<OtpEng> {
               Row(
                 children: [
                   TextButton(
-                      onPressed: () async {
-                        Navigator.pushNamedAndRemoveUntil(
+                    onPressed: () async {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        'phone',
+                        (route) => false,
+                      );
+                    },
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
                           context,
-                          'phone',
-                          (route) => false,
+                          MaterialPageRoute(builder: (context) => LoginEng()),
                         );
                       },
                       child: const Text(
                         "Edit Phone Number ?",
                         style: TextStyle(color: Colors.black),
-                      ))
+                      ),
+                    ),
+                  )
                 ],
               )
             ],

@@ -1,16 +1,65 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../Dashbord/home.dart';
 import '../Login/login_eng.dart';
 import '../Login/login_nep.dart';
+
 class Language extends StatefulWidget {
   const Language({super.key});
 
   @override
-  State<Language> createState() => _LanguageState();
+  State<Language> createState() => LanguageState();
 }
 
-class _LanguageState extends State<Language> {
+class LanguageState extends State<Language> {
+  static const String KEYLOGIN = "login";
+  String check = "";
+  @override
+  void initState() {
+    super.initState();
+    checkIfLoggedIn();
+  }
+
+  void checkIfLoggedIn() async {
+    var prefs = await SharedPreferences.getInstance();
+    var isLoggedIn = prefs.getBool(KEYLOGIN);
+
+    if (isLoggedIn != null) {
+      if (isLoggedIn) {
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Home(),
+          ),
+        );
+      } else if (check == "0") {
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginEng(),
+          ),
+        );
+      } else if (check == "1") {
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginNep(),
+          ),
+        );
+      }
+    } else {
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginEng(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,26 +71,6 @@ class _LanguageState extends State<Language> {
         ),
       ),
       child: Scaffold(
-        appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        actions: <Widget>[
-          Padding(
-            padding:
-            const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                exit(0);
-               },
-              child: const Icon(
-                Icons.cancel,
-                size: 26.0,
-                color: Colors.red,
-               ),
-             ),
-           ),
-         ],
-        
-      ),
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
@@ -80,13 +109,9 @@ class _LanguageState extends State<Language> {
                   ),
                 ),
                 onPressed: () {
+                  checkIfLoggedIn();
+                  check = "0";
                   Colors.grey;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginEng(),
-                    ),
-                  );
                 },
               ),
             ),
@@ -108,12 +133,9 @@ class _LanguageState extends State<Language> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginNep(),
-                    ),
-                  );
+                  checkIfLoggedIn();
+                  Colors.grey;
+                  check = "1";
                 },
               ),
             ),

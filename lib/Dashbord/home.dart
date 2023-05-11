@@ -1,8 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:khatakapi/Dashbord/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Language/language.dart';
 import 'editprofile.dart';
 import 'floatingbuttonadd.dart';
-
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -42,9 +46,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             Padding(
               padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () {
-                 
-                },
+                onTap: () {},
                 child: const Icon(
                   Icons.language,
                   size: 26.0,
@@ -155,26 +157,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const EditProfile(),
+                      builder: (context) => SettingsPage(),
                     ),
                   );
                 },
               ),
-               ListTile(
+              ListTile(
                 iconColor: const Color.fromARGB(255, 148, 121, 163),
                 // tileColor:  Color.fromARGB(255, 24, 210, 213),
                 // textColor: Colors.white,
                 leading: const Icon(
-                  Icons.info_rounded,
+                  Icons.logout_outlined,
                 ),
                 title: const Text(
-                  'About',
+                  'Log Out',
                 ),
-                onTap: () {
+                onTap: () async {
+                  var pref = await SharedPreferences.getInstance();
+                  pref.setBool(LanguageState.KEYLOGIN, false);
+                  // ignore: use_build_context_synchronously
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const EditProfile(),
+                      builder: (context) => exit(0),
                     ),
                   );
                 },

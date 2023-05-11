@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Dashbord/home.dart';
 import 'otp_Eng.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 class LoginEng extends StatefulWidget {
   const LoginEng({super.key});
 
@@ -27,10 +26,6 @@ class _LoginEngState extends State<LoginEng> {
   Widget build(BuildContext context) {
     return Scaffold(
 appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         actions: [
           IconButton(
             icon: const Icon(
@@ -145,15 +140,12 @@ appBar: AppBar(
                     await FirebaseAuth.instance.verifyPhoneNumber(
                       phoneNumber: '${countryController.text + number}',
                       verificationCompleted:
-                          (PhoneAuthCredential credential) async{
-                            SharedPreferences prefs = await SharedPreferences.getInstance();
-                            await prefs.setString('phone', number);
-                          },
+                          (PhoneAuthCredential credential) {},
                       verificationFailed: (FirebaseAuthException e) {},
-                      codeSent: (String verificationId, int? resendToken) {
+                      codeSent: (String verificationId, int? resendToken) async {
                         LoginEng.verify = verificationId;
-
-                        Navigator.push(
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const OtpEng(),
