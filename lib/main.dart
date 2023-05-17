@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'Dashbord/settings.dart';
 import 'Language/language.dart';
 import 'firebase_options.dart';
 
@@ -28,18 +29,16 @@ class _RootPageState extends State<RootPage> {
     );
   }
 }
-
+ var mode = SettingsPageState();
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
+ 
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.cyan,
-        scaffoldBackgroundColor: Colors.white,
-      ),
+      theme: mode.isDarkMode ? ThemeData.dark() : ThemeData.light(),
       home: AnimatedSplashScreen(
         splash: Image.asset('assets/images/logo.png'),
         nextScreen: const Language(),

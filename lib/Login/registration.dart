@@ -1,7 +1,5 @@
-import 'dart:io';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../Dashbord/home.dart';
 
 const List<String> list = <String>[
@@ -22,11 +20,10 @@ class Registration extends StatefulWidget {
 class _RegistrationState extends State<Registration> {
   String dropdownValue = list.first;
 
-  var userNameController = new TextEditingController();
-  var userGenderController = new TextEditingController();
-  var userAgeController = new TextEditingController();
+  var userNameController = TextEditingController();
+  var userGenderController = TextEditingController();
+  var userAgeController = TextEditingController();
 
-  final db = FirebaseDatabase.instance.ref();
   @override
   void initState() {
     super.initState();
@@ -35,7 +32,7 @@ class _RegistrationState extends State<Registration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
@@ -57,7 +54,7 @@ class _RegistrationState extends State<Registration> {
           )
         ],
         backgroundColor: const Color.fromARGB(255, 148, 121, 163),
-      ),   
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -157,8 +154,8 @@ class _RegistrationState extends State<Registration> {
                 onChanged: (String? value) {
                   // This is called when the user selects an item.
                   setState(() {
-                    //controller : userGenderController;
                     dropdownValue = value!;
+                    userGenderController.text = value;
                   });
                 },
                 items: list.map<DropdownMenuItem<String>>((String value) {
@@ -200,19 +197,6 @@ class _RegistrationState extends State<Registration> {
               ),
             ),
             Container(
-              alignment: Alignment.centerLeft,
-              margin: const EdgeInsets.only(
-                  left: 40, right: 40, top: 20, bottom: 10),
-              padding: const EdgeInsets.only(left: 5, right: 5),
-              height: 54,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(primary: Colors.grey[200]),
-                onPressed: () {},
-                icon: const Icon(Icons.add),
-                label: const Text("Image"),
-              ),
-            ),
-            Container(
               alignment: Alignment.center,
               margin: const EdgeInsets.only(left: 40, right: 40, top: 20),
               padding: const EdgeInsets.only(left: 20, right: 20),
@@ -235,14 +219,19 @@ class _RegistrationState extends State<Registration> {
                 onPressed: () {
                   if (userNameController.text.isNotEmpty &&
                       userAgeController.text.isNotEmpty) {
-                    insertData(userNameController.text, userAgeController.text);
+                    final user = User(
+                        name: userNameController.text,
+                        age: int.parse(userAgeController.text),
+                        gender: userGenderController.text,
+                        );
+                    createUser(user);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Home(),
+                      ),
+                    );
                   }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Home(),
-                    ),
-                  );
                 },
                 child: const Text(
                   "            Enter            ",
@@ -255,13 +244,39 @@ class _RegistrationState extends State<Registration> {
       ),
     );
   }
+}
+Stream<List<User>> readUsers() => FirebaseFirestore.instance.collection('users').snapshots().map((snapshot) => snapshot.docs.map((doc) => User.fromJson(doc.data())).toList());
+Future createUser(User user) async {
+  final docUser = FirebaseFirestore.instance.collection('users').doc("details");
+  user.id = docUser.id;
+  final json = user.toJson();
+  await docUser.set(json);
+}
 
-  void insertData(String name, String age) {
-    db.child("path").set({
-      'name': name,
-      'age': age,
-    });
-    userNameController.clear();
-    userAgeController.clear();
-  }
+class User {
+  String? id;
+  final String name;
+  final int age;
+  final String gender;
+
+  User({
+    this.id,
+    required this.name,
+    required this.age,
+    required this.gender,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'age': age,
+        'gender': gender,
+      };
+
+    static User fromJson(Map<String, dynamic> json) => User(
+      id: json['id'],
+      name: json['name'],
+      age: json['age'],
+      gender: json['gender'],
+    );
 }
