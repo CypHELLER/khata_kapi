@@ -21,26 +21,33 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Animation<double>? _animation;
   AnimationController? _animationController;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  List<Map<String, dynamic>> data = [];
-  var username;
-  Future<void> _getData() async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('users').get();
-    setState(() {
-      data = querySnapshot.docs
-          .map((DocumentSnapshot document) =>
-              document.data() as Map<String, dynamic>)
-          .toList();
-    });
-    data.map((Map<String, dynamic> item) {
-      return username = item['user'];
-    }).toList();
+  final TextEditingController _nameController = TextEditingController();
+
+  Future<void> _fetchData() async {
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc('details');
+
+    final snapshot = await userDoc.get();
+
+    if (snapshot.exists) {
+      final userData = snapshot.data() as Map<String, dynamic>;
+      setState(() {
+        _nameController.text = userData['name'] ?? '';
+      });
+      // Print the fetched data for debugging
+      print('Fetched Profile Data:');
+      print('Name: ${_nameController.text}');
+    } else {
+      print('Profile data does not exist');
+    }
   }
 
   @override
   void initState() {
-    _getData();
+    super.initState();
+    _fetchData();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 260),
@@ -49,8 +56,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     final curvedAnimation =
         CurvedAnimation(curve: Curves.easeInOut, parent: _animationController!);
     _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
-
-    super.initState();
   }
 
   @override
@@ -85,7 +90,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 color: Color.fromARGB(255, 148, 121, 163),
               ),
               accountName: Text(
-                'name',
+                '${_nameController.text}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -98,7 +103,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              currentAccountPicture: FlutterLogo(),
+              currentAccountPicture: CircleAvatar(
+                radius: 36,
+                backgroundColor: Colors.transparent,
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/profile.png',
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
             ),
             ListTile(
               iconColor: const Color.fromARGB(255, 148, 121, 163),
@@ -377,4 +391,3 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 }
-

@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../Dashbord/home.dart';
 import 'otp_Eng.dart';
+
 class LoginEng extends StatefulWidget {
   const LoginEng({super.key});
 
@@ -14,18 +16,16 @@ class _LoginEngState extends State<LoginEng> {
   TextEditingController countryController = TextEditingController();
   var number = "";
 
-  
   @override
   void initState() {
     countryController.text = "+977";
     super.initState();
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-appBar: AppBar(
+      appBar: AppBar(
         actions: [
           IconButton(
             icon: const Icon(
@@ -43,9 +43,9 @@ appBar: AppBar(
           )
         ],
         backgroundColor: const Color.fromARGB(255, 148, 121, 163),
-      ),   
+      ),
       body: Container(
-         padding: const EdgeInsets.only(left: 30, bottom :35.0, right: 30),
+        padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/background_image2.png'),
@@ -99,6 +99,10 @@ appBar: AppBar(
                         controller: countryController,
                         readOnly: true,
                         keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10),
+                        ],
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                         ),
@@ -137,23 +141,44 @@ appBar: AppBar(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
-                    await FirebaseAuth.instance.verifyPhoneNumber(
-                      phoneNumber: '${countryController.text + number}',
-                      verificationCompleted:
-                          (PhoneAuthCredential credential) {},
-                      verificationFailed: (FirebaseAuthException e) {},
-                      codeSent: (String verificationId, int? resendToken) async {
-                        LoginEng.verify = verificationId;
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const OtpEng(),
-                          ),
-                        );
-                      },
-                      codeAutoRetrievalTimeout: (String verificationId) {},
-                    );
+                    if (number.length == 10) {
+                      await FirebaseAuth.instance.verifyPhoneNumber(
+                        phoneNumber: '${countryController.text + number}',
+                        verificationCompleted:
+                            (PhoneAuthCredential credential) {},
+                        verificationFailed: (FirebaseAuthException e) {},
+                        codeSent:
+                            (String verificationId, int? resendToken) async {
+                          LoginEng.verify = verificationId;
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const OtpEng(),
+                            ),
+                          );
+                        },
+                        codeAutoRetrievalTimeout: (String verificationId) {},
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Invalid Phone Number'),
+                            content: const Text('Please enter a 10-digit phone number.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                   child: const Text(
                     "Send the code",

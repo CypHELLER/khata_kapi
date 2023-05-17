@@ -245,7 +245,7 @@ class _RegistrationState extends State<Registration> {
     );
   }
 }
-Stream<List<User>> readUsers() => FirebaseFirestore.instance.collection('users').snapshots().map((snapshot) => snapshot.docs.map((doc) => User.fromJson(doc.data())).toList());
+
 Future createUser(User user) async {
   final docUser = FirebaseFirestore.instance.collection('users').doc("details");
   user.id = docUser.id;
@@ -272,11 +272,4 @@ class User {
         'age': age,
         'gender': gender,
       };
-
-    static User fromJson(Map<String, dynamic> json) => User(
-      id: json['id'],
-      name: json['name'],
-      age: json['age'],
-      gender: json['gender'],
-    );
 }

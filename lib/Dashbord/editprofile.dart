@@ -4,14 +4,60 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  const EditProfile({Key? key}) : super(key: key);
 
   @override
-  State<EditProfile> createState() => _EditProfileState();
+  // ignore: library_private_types_in_public_api
+  _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProfileData();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _genderController.dispose();
+    _ageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchProfileData() async {
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc('details');
+
+    final snapshot = await userDoc.get();
+
+    if (snapshot.exists) {
+      final userData = snapshot.data() as Map<String, dynamic>;
+      setState(() {
+        _nameController.text = userData['name'] ?? '';
+        _phoneController.text = _auth.currentUser?.phoneNumber ?? 'phone';
+        _genderController.text = userData['gender'] ?? '';
+        _ageController.text = userData['age']?.toString() ?? '';
+      });
+      // Print the fetched data for debugging
+      print('Fetched Profile Data:');
+      print('Name: ${_nameController.text}');
+      print('Phone: ${_phoneController.text}');
+      print('Gender: ${_genderController.text}');
+      print('Age: ${_ageController.text}');
+    } else {
+      print('Profile data does not exist');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,9 +66,12 @@ class _EditProfileState extends State<EditProfile> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Image.asset(
-          "assets/images/logo.png",
-          width: 80,
+        title: const Text(
+          "Edit Profile",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: const Color.fromARGB(255, 148, 121, 163),
         actions: [
@@ -35,321 +84,192 @@ class _EditProfileState extends State<EditProfile> {
           )
         ],
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-            return ListView.builder(
-              //shrinkWrap: true,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) => SingleChildScrollView(
-                padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
-                child: GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: ListView(
-                    children: [
-                      const Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Center(
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: 130,
-                              height: 130,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 4,
-                                  color:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    spreadRadius: 2,
-                                    blurRadius: 10,
-                                    color: Colors.black.withOpacity(0.1),
-                                    offset: const Offset(0, 10),
-                                  ),
-                                ],
-                                shape: BoxShape.circle,
-                                image: const DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage("assets/images/logo.png"),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    width: 4,
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                  ),
-                                  color: Colors.blue,
-                                ),
-                                child:
-                                    const Icon(Icons.edit, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 35,
-                      ),
-                      textFieldmethod(
-                          "Full Name", snapshot.data?.docs[index]['name']),
-                      textFieldmethod(
-                          "Phone", _auth.currentUser?.phoneNumber ?? 'phone'),
-                      textFieldmethod(
-                          "Gender", snapshot.data?.docs[index]['gender']),
-                      textFieldmethod("Age",
-                          (snapshot.data!.docs[index]['age']).toString()),
-                      const SizedBox(
-                        height: 35,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 150,
-                            height: 45,
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.red,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5))),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Home(),
-                                  ),
-                                );
-                              },
-                              icon:
-                                  const Icon(Icons.cancel, color: Colors.white),
-
-                              label: const Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ), //label text
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 35,
-                          ),
-                          SizedBox(
-                            width: 150,
-                            height: 45,
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.green.shade600,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5))),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Home(),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.save, color: Colors.white),
-
-                              label: const Text(
-                                "Save",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ), //label text
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          } else {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
-              child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-                child: ListView(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Column(
+            children: [
+              const SizedBox(height: 15),
+              Center(
+                child: Stack(
                   children: [
-                    const Text(
-                      "Edit Profile",
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Center(
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 130,
-                            height: 130,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 4,
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  spreadRadius: 2,
-                                  blurRadius: 10,
-                                  color: Colors.black.withOpacity(0.1),
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                              shape: BoxShape.circle,
-                              image: const DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage("assets/images/logo.png"),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  width: 4,
-                                  color:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                ),
-                                color: Colors.blue,
-                              ),
-                              child:
-                                  const Icon(Icons.edit, color: Colors.white),
-                            ),
+                    Container(
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 4,
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            spreadRadius: 2,
+                            blurRadius: 10,
+                            color: Colors.black.withOpacity(0.1),
+                            offset: const Offset(0, 10),
                           ),
                         ],
+                        shape: BoxShape.circle,
+                        image: const DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage("assets/images/logo.png"),
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 35,
-                    ),
-                    textFieldmethod("Full Name", ''),
-                    textFieldmethod("Phone", ''),
-                    textFieldmethod("Gender", ''),
-                    textFieldmethod("Age", ''),
-                    const SizedBox(
-                      height: 35,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 150,
-                          height: 45,
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.red,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5))),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.cancel, color: Colors.white),
-
-                            label: const Text(
-                              "Cancel",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ), //label text
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 4,
+                            color: Theme.of(context).scaffoldBackgroundColor,
                           ),
+                          color: const Color.fromARGB(255, 148, 121, 163),
                         ),
-                        const SizedBox(
-                          height: 35,
+                        child: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
                         ),
-                        SizedBox(
-                          width: 150,
-                          height: 45,
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.green.shade600,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5))),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.save, color: Colors.white),
-
-                            label: const Text(
-                              "Save",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ), //label text
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Padding textFieldmethod(String labelText, String placeholder) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0),
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(bottom: 3),
-          labelText: labelText,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: placeholder,
-          hintStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+              const SizedBox(height: 35),
+              textFieldMethod("Full Name", _nameController, true),
+              textFieldMethod("Phone", _phoneController, false),
+              textFieldMethod("Gender", _genderController, true),
+              textFieldMethod("Age", _ageController, true),
+              const SizedBox(height: 35),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 150,
+                    height: 45,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.cancel,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 35),
+                  SizedBox(
+                    width: 150,
+                    height: 45,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green.shade600,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                      ),
+                      onPressed: () {
+                        _updateProfileData();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.save,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        "Save",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
+  }
+
+  Padding textFieldMethod(String labelText, TextEditingController controller,bool editable) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
+      child: TextField(
+      controller: controller,
+      enabled: editable,
+      style: const TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+      ),
+      cursorColor: Colors.blue, // Customize the cursor color
+      decoration: InputDecoration(
+        labelText: labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0), // Adjust the content padding
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.blue),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        filled: true,
+        fillColor: Colors.grey.shade200,
+        hintStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black.withOpacity(0.6),
+        ),
+        suffixIcon: editable ? const Icon(Icons.edit, color: Colors.blue) : null, // Add an edit icon as suffix if editable
+      ),
+    ),
+    );
+  }
+
+  Future<void> _updateProfileData() async {
+    final userRef =
+        FirebaseFirestore.instance.collection('users').doc('details');
+
+    await userRef.update({
+      'name': _nameController.text,
+      'gender': _genderController.text,
+      'age': int.tryParse(_ageController.text) ?? 0,
+    });
   }
 }
