@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../Expense/expense.dart';
 import '../New Item/addNewItem.dart';
 import '../New Party/addNewParty.dart';
@@ -64,7 +63,7 @@ class _AddButtonState extends State<AddButton> {
                       height: 45,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.green.shade600,
+                            backgroundColor: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
@@ -93,7 +92,7 @@ class _AddButtonState extends State<AddButton> {
                       height: 45,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.green.shade600,
+                            backgroundColor: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
@@ -123,7 +122,7 @@ class _AddButtonState extends State<AddButton> {
                       height: 45,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.green.shade600,
+                            backgroundColor: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
@@ -153,7 +152,7 @@ class _AddButtonState extends State<AddButton> {
                       height: 45,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.green.shade600,
+                            backgroundColor: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
@@ -182,7 +181,7 @@ class _AddButtonState extends State<AddButton> {
                       height: 45,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.green.shade600,
+                            backgroundColor: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
@@ -212,7 +211,7 @@ class _AddButtonState extends State<AddButton> {
                       height: 45,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.green.shade600,
+                            backgroundColor: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
@@ -241,7 +240,7 @@ class _AddButtonState extends State<AddButton> {
                       height: 45,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.green.shade600,
+                            backgroundColor: Colors.green.shade600,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {

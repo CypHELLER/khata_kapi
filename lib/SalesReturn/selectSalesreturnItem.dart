@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 
 class SelectSalesreturnItem extends StatefulWidget {
@@ -35,8 +36,8 @@ class _SelectSalesreturnItemState extends State<SelectSalesreturnItem> {
         padding: const EdgeInsets.only(left: 16, top: 20, right: 16),
         child: Center(
           child: ListView(
-            children: [
-              const Text(
+            children: const [
+              Text(
                 "Select Item",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
               ),

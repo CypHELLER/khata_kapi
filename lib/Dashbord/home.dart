@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:khatakapi/Dashbord/settings.dart';
 import 'package:khatakapi/Dashbord/transactions.dart';
-import '../Login/registration.dart' as user;
 import '../Sales/sales.dart';
 import 'customers.dart';
 import 'floatingbuttonadd.dart';
@@ -19,8 +18,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  Animation<double>? _animation;
-  AnimationController? _animationController;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _nameController = TextEditingController();
@@ -48,14 +45,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _fetchData();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 260),
-    );
 
-    final curvedAnimation =
-        CurvedAnimation(curve: Curves.easeInOut, parent: _animationController!);
-    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
   }
 
   @override
@@ -90,7 +80,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 color: Color.fromARGB(255, 148, 121, 163),
               ),
               accountName: Text(
-                '${_nameController.text}',
+                _nameController.text,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -208,39 +198,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    SizedBox(
-                      width: 150,
-                      height: 45,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.green.shade600,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Reminders(),
-                            ),
-                          );
-                        },
-                        icon:
-                            const Icon(Icons.watch_later, color: Colors.white),
-
-                        label: const Text(
-                          "Reminders",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ), //label text
-                      ),
-                    ),
+                    
                     const SizedBox(
                       height: 30,
                     ),
@@ -254,7 +212,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           height: 45,
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                                primary: Colors.green.shade600,
+                                backgroundColor: Colors.green.shade600,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5))),
                             onPressed: () {
@@ -283,6 +241,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           height: 45,
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
+                                // ignore: deprecated_member_use
                                 primary: Colors.green.shade600,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5))),

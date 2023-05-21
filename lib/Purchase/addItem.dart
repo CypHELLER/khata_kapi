@@ -27,6 +27,7 @@ class AddPurchasedItem extends StatefulWidget {
     );
   }
 class _AddPurchasedItemState extends State<AddPurchasedItem> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

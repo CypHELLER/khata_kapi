@@ -380,8 +380,7 @@ class _NewPartyState extends State<NewParty> {
     try {
       final docUser = FirebaseFirestore.instance
           .collection(_partyTypeController.text)
-          .doc();
-      _nameController.text = docUser.id;
+          .doc(_phoneController.text);
       final json = party.toJson();
       await docUser.set(json);
       print('User added successfully!');
@@ -392,7 +391,6 @@ class _NewPartyState extends State<NewParty> {
 }
 
 class User {
-  String? id;
   final String name;
   final int phone;
   final String address;
@@ -401,7 +399,6 @@ class User {
   final int openingBlc;
 
   User({
-    this.id,
     required this.name,
     required this.phone,
     required this.address,
@@ -410,7 +407,6 @@ class User {
     required this.date,
   });
   Map<String, dynamic> toJson() => {
-        'id': id,
         'phone': phone,
         'address': address,
         'date': date,

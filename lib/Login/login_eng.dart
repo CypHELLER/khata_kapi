@@ -137,13 +137,13 @@ class _LoginEngState extends State<LoginEng> {
                 height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.green.shade600,
+                      backgroundColor: Colors.green.shade600,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
                     if (number.length == 10) {
                       await FirebaseAuth.instance.verifyPhoneNumber(
-                        phoneNumber: '${countryController.text + number}',
+                        phoneNumber: countryController.text + number,
                         verificationCompleted:
                             (PhoneAuthCredential credential) {},
                         verificationFailed: (FirebaseAuthException e) {},

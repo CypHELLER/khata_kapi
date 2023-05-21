@@ -12,6 +12,7 @@ class Language extends StatefulWidget {
 }
 
 class LanguageState extends State<Language> {
+  // ignore: constant_identifier_names
   static const String KEYLOGIN = "login";
   String check = "";
   @override
@@ -30,7 +31,7 @@ class LanguageState extends State<Language> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Home(),
+            builder: (context) => const Home(),
           ),
         );
       } else if (check == "0") {
@@ -38,7 +39,7 @@ class LanguageState extends State<Language> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginEng(),
+            builder: (context) => const LoginEng(),
           ),
         );
       } else if (check == "1") {
@@ -46,7 +47,7 @@ class LanguageState extends State<Language> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginNep(),
+            builder: (context) => const LoginNep(),
           ),
         );
       }
@@ -55,7 +56,7 @@ class LanguageState extends State<Language> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginEng(),
+          builder: (context) => const LoginEng(),
         ),
       );
     }
@@ -95,7 +96,7 @@ class LanguageState extends State<Language> {
               padding: const EdgeInsets.only(left: 150, top: 370),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  backgroundColor: Colors.green,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -119,7 +120,7 @@ class LanguageState extends State<Language> {
               padding: const EdgeInsets.only(left: 155, top: 450),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  backgroundColor: Colors.green,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

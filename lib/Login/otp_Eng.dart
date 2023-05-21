@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:khatakapi/Login/registration.dart';
@@ -30,11 +31,13 @@ class _OtpEngState extends State<OtpEng> {
       ),
     );
 
+    // ignore: unused_local_variable
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
       border: Border.all(color: const Color.fromRGBO(114, 178, 238, 1)),
       borderRadius: BorderRadius.circular(8),
     );
 
+    // ignore: unused_local_variable
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
         color: const Color.fromRGBO(234, 239, 243, 1),
@@ -102,7 +105,7 @@ class _OtpEngState extends State<OtpEng> {
                 height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.green.shade600,
+                      backgroundColor: Colors.green.shade600,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
@@ -147,7 +150,7 @@ class _OtpEngState extends State<OtpEng> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginEng()),
+                          MaterialPageRoute(builder: (context) => const LoginEng()),
                         );
                       },
                       child: const Text(

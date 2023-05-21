@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../Dashbord/home.dart';
 
@@ -21,6 +22,11 @@ class Expense extends StatefulWidget {
 
 class _ExpenseState extends State<Expense> {
   String dropdownvalue = billType.first;
+
+  final TextEditingController _expTypeController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController __remarksController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,14 +35,17 @@ class _ExpenseState extends State<Expense> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Image.asset(
-          "assets/images/logo.png",
-          width: 80,
+        title: const Text(
+          "Expences Bill",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.currency_rupee,
+              Icons.money,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -48,13 +57,7 @@ class _ExpenseState extends State<Expense> {
         padding: const EdgeInsets.only(left: 16, top: 20, right: 16),
         child: ListView(
           children: [
-            const Text(
-              "Add Expenses",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             Container(
               padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
               child: DropdownButtonHideUnderline(
@@ -71,6 +74,7 @@ class _ExpenseState extends State<Expense> {
                     onChanged: (String? value) {
                       setState(() {
                         dropdownvalue = value!;
+                        _expTypeController.text = value;
                       });
                     },
                     items:
@@ -84,9 +88,49 @@ class _ExpenseState extends State<Expense> {
                 ),
               ),
             ),
-            text_field("Amount Rs.", ""),
-            text_field("Remarks", ""),
-            text_field("Date", "year/month/day"),
+             Container(
+              padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
+              child: TextField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+                cursorColor: Colors.blue, // Customize the cursor color
+                decoration: InputDecoration(
+                  labelText: 'Amount Rs.',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 16.0), // Adjust the content padding
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade200,
+                  hintStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black.withOpacity(0.6),
+                  ),
+                ),
+              ),
+            ),
+            textFieldMethod("Remarks", __remarksController),
+            textFieldMethod("Date", _dateController),
             
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,7 +140,7 @@ class _ExpenseState extends State<Expense> {
                   height: 45,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
+                        backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () {
@@ -122,6 +166,7 @@ class _ExpenseState extends State<Expense> {
                   height: 45,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
+                        // ignore: deprecated_member_use
                         primary: Colors.green.shade600,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
@@ -154,19 +199,39 @@ class _ExpenseState extends State<Expense> {
     );
   }
 
-  Padding text_field(String labelText, String placeholder) {
+Padding textFieldMethod(String labelText, TextEditingController controller) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
+      padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
       child: TextField(
+        controller: controller,
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.black,
+        ),
+        cursorColor: Colors.blue, // Customize the cursor color
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(bottom: 3),
           labelText: labelText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: placeholder,
-          hintStyle: const TextStyle(
+          contentPadding: const EdgeInsets.symmetric(
+              vertical: 10.0, horizontal: 16.0), // Adjust the content padding
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.blue),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade200,
+          hintStyle: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.black.withOpacity(0.6),
           ),
         ),
       ),

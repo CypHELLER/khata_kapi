@@ -417,7 +417,7 @@ class _AddNewItemState extends State<AddNewItem> {
 
   Future addItem(User item) async {
     try {
-      final docUser = FirebaseFirestore.instance.collection('').doc();
+      final docUser = FirebaseFirestore.instance.collection('items').doc(_itemCodeTypeController.text);
       //_nameController.text = docUser.id;
       final json = item.toJson();
       await docUser.set(json);

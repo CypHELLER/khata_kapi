@@ -16,6 +16,7 @@ class SettingsPage extends StatefulWidget {
 
 class SettingsPageState extends State<SettingsPage> {
   late bool isDarkMode = false;
+  // ignore: constant_identifier_names
   static const String MODE = 'isDarkMode';
 
   @override
