@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'home.dart';
@@ -11,11 +12,16 @@ class Suppliers extends StatefulWidget {
 }
 
 class _SuppliersState extends State<Suppliers> {
+  String uid = "";
+  @override
+  void initState() {
+    super.initState();
+    uid = FirebaseAuth.instance.currentUser!.phoneNumber.toString();
+    print(uid);
+  }
+
   @override
   Widget build(BuildContext context) {
-    CollectionReference users =
-        FirebaseFirestore.instance.collection('Supplier');
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -40,9 +46,10 @@ class _SuppliersState extends State<Suppliers> {
         ],
         backgroundColor: const Color.fromARGB(255, 148, 121, 163),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: users.snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      body: StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection("party").doc(uid).snapshots(),
+        builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           }
@@ -53,60 +60,69 @@ class _SuppliersState extends State<Suppliers> {
             );
           }
 
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (BuildContext context, int index) {
-              if (snapshot.data!.docs.isEmpty) {
-                return const Center(
-                  child: Text('No data available'),
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text("No Data Found"),
+            );
+          }
+          if (snapshot.data!.exists) {
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            if (data.containsKey("Supplier")) {
+              List<dynamic> dataList = data["Supplier"];
+              if (dataList.isEmpty) {
+                return Center(
+                  child: Text("No data"),
                 );
               }
-
-              final document = snapshot.data!.docs[index];
-              final data = document.data() as Map<String, dynamic>;
-              final name = data['name'];
-              final transactionType = data['transactionType'];
-              final openingBlc = data['openingBlc'];
-              final address = data['address'];
-              final date = data['date'];
-              final phone = data['phone'];
-
-              return Padding(
-                padding: const EdgeInsets.only(
-                    top: 10, left: 16, bottom: 10, right: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.green,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: ListTile(
-                    title: Text(name),
-                    subtitle:
-                        Text(transactionType + " Rs. " + openingBlc.toString()),
-                    trailing: const Icon(Icons.arrow_forward),
-                    onTap: () {
-                      // Navigate to next page and display specific field
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NextPage(
-                            name: name,
-                            transactionType: transactionType,
-                            openingBlc: openingBlc,
-                            address: address,
-                            date: date,
-                            phone: phone,
-                          ),
+              return ListView.builder(
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10, left: 16, bottom: 10, right: 16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.blue,
+                          width: 2.0,
                         ),
-                      );
-                    },
-                  ),
-                ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: ListTile(
+                        title: Text(dataList[index]["name"]),
+                        subtitle: Text(
+                            "${dataList[index]["transactionType"]} Rs ${dataList[index]["openingBlc"]}"),
+                        //Text(transactionType + " Rs. " + openingBlc.toString()),
+                        trailing: const Icon(Icons.arrow_forward),
+                        onTap: () {
+                          // Navigate to next page and display specific field
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NextPage(
+                                name: dataList[index]["name"],
+                                transactionType: dataList[index]
+                                    ["transactionType"],
+                                openingBlc: int.parse(
+                                    dataList[index]["openingBlc"].toString()),
+                                address: dataList[index]["address"],
+                                date: dataList[index]["date"],
+                                phone: int.parse(
+                                    dataList[index]["phone"].toString()),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
               );
-            },
+            }
+          }
+          return Center(
+            child: Text("No Suppliers found"),
           );
         },
       ),

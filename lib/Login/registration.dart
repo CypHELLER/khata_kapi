@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../Dashbord/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 const List<String> list = <String>[
   'Gender',
@@ -14,12 +15,13 @@ class Registration extends StatefulWidget {
   const Registration({super.key});
 
   @override
-  State<Registration> createState() => _RegistrationState();
+  State<Registration> createState() => RegistrationState();
 }
 
-class _RegistrationState extends State<Registration> {
+class RegistrationState extends State<Registration> {
   String dropdownValue = list.first;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String uID = "";
   var userNameController = TextEditingController();
   var userGenderController = TextEditingController();
   var userAgeController = TextEditingController();
@@ -213,17 +215,18 @@ class _RegistrationState extends State<Registration> {
               ),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.green.shade600,
+                    backgroundColor: Colors.green.shade600,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10))),
                 onPressed: () {
                   if (userNameController.text.isNotEmpty &&
                       userAgeController.text.isNotEmpty) {
+                    uID = (_auth.currentUser?.phoneNumber).toString();
                     final user = User(
-                        name: userNameController.text,
-                        age: int.parse(userAgeController.text),
-                        gender: userGenderController.text,
-                        );
+                      name: userNameController.text,
+                      age: int.parse(userAgeController.text),
+                      gender: userGenderController.text,
+                    );
                     createUser(user);
                     Navigator.push(
                       context,
@@ -244,30 +247,28 @@ class _RegistrationState extends State<Registration> {
       ),
     );
   }
+  Future<void> createUser(User user) async {
+  final firestore = FirebaseFirestore.instance;
+  final collectionRef = firestore.collection('users').doc(uID);
+  await collectionRef.set(user.toJson());
 }
 
-Future createUser(User user) async {
-  final docUser = FirebaseFirestore.instance.collection('users').doc("details");
-  user.id = docUser.id;
-  final json = user.toJson();
-  await docUser.set(json);
 }
+
 
 class User {
-  String? id;
   final String name;
   final int age;
   final String gender;
 
   User({
-    this.id,
+
     required this.name,
     required this.age,
     required this.gender,
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
         'name': name,
         'age': age,
         'gender': gender,

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import '../Dashbord/home.dart';
 
 const List<String> itemCategory = <String>[
@@ -30,7 +32,7 @@ class AddNewItem extends StatefulWidget {
 class _AddNewItemState extends State<AddNewItem> {
   String dropdownvalue1 = itemCategory.first;
   String dropdownvalue2 = itemUnit.first;
-
+  String uID = "";
   //final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _sellpriceController = TextEditingController();
@@ -46,6 +48,84 @@ class _AddNewItemState extends State<AddNewItem> {
   @override
   void initState() {
     super.initState();
+    getdata();
+  }
+
+  void getdata() {
+    uID = (FirebaseAuth.instance.currentUser!.phoneNumber).toString();
+    print(uID);
+  }
+
+  Future addItem() async {
+    try {
+      final docUser = FirebaseFirestore.instance.collection("items").doc(uID);
+      await docUser.update({
+        "items": FieldValue.arrayUnion([
+          {
+            'name': _itemNameController.text,
+            'category': _categoryController.text,
+            'unit': _itemUnitController.text,
+            'sellingPrice': _sellpriceController.text,
+            'purchasePrice': _purchaseController.text,
+            'quantity': int.parse(_stockQuantityTypeController.text),
+            'date': _dateController.text,
+            'itemCode': _itemCodeTypeController.text,
+            'location': _locationController.text,
+            'remarks': _remarksController.text,
+          }
+        ]),
+      }).then(
+        (value) => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        ),
+      );
+
+      print('User added successfully!');
+    } on FirebaseException catch (e) {
+      if (e.code == "not-found") {
+        await FirebaseFirestore.instance.collection("items").doc(uID).set({
+          "items": FieldValue.arrayUnion([
+            {
+              'name': _itemNameController.text,
+              'category': _categoryController.text,
+              'unit': _itemUnitController.text,
+              'sellingPrice': int.parse(_sellpriceController.text),
+              'purchasePrice': int.parse(_purchaseController.text),
+              'quantity': int.parse(_stockQuantityTypeController.text),
+              'date': _dateController.text,
+              'itemCode': _itemCodeTypeController.text,
+              'location': _locationController.text,
+              'remarks': _remarksController.text,
+            }
+          ]),
+        }).then(
+          (value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ),
+          ),
+        );
+      }
+      print('Error adding user: $e');
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
   }
 
   @override
@@ -265,7 +345,48 @@ class _AddNewItemState extends State<AddNewItem> {
                 ),
               ),
             ),
-            textFieldMethod("Date", _dateController),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
+              child: GestureDetector(
+                child: TextField(
+                    controller: _dateController,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    cursorColor: Colors.blue, // Customize the cursor color
+                    decoration: InputDecoration(
+                      labelText: "Date",
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 16.0), // Adjust the content padding
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black.withOpacity(0.6),
+                      ),
+                    ),
+                    readOnly: true,
+                    onTap: () => {
+                          _selectDate(context),
+                        }),
+              ),
+            ),
             textFieldMethod("Item Code", _itemCodeTypeController),
             textFieldMethod("Item Location", _locationController),
             textFieldMethod("Remarks", _remarksController),
@@ -277,7 +398,7 @@ class _AddNewItemState extends State<AddNewItem> {
                   height: 45,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
+                        backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () {
@@ -303,44 +424,25 @@ class _AddNewItemState extends State<AddNewItem> {
                   height: 45,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.green.shade600,
+                        backgroundColor: Colors.green.shade600,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () {
-                      
-                       if (_itemNameController.text.isNotEmpty &&
-                            _categoryController.text.isNotEmpty &&
-                            _itemUnitController.text.isNotEmpty &&
-                            _sellpriceController.text.isNotEmpty &&
-                            _purchaseController.text.isNotEmpty &&
-                            _stockQuantityTypeController.text.isNotEmpty) {
-                          final user = User(
-                            name: _itemNameController.text,
-                            purchasePrice: int.parse(_purchaseController.text),
-                            category: _categoryController.text,
-                            date: _itemUnitController.text,
-                            unit: _categoryController.text,
-                            sellingPrice: int.parse(_sellpriceController.text),
-                             stockQuantity: int.parse(_stockQuantityTypeController.text),
-                            location: _locationController.text,
-                            remarks: _remarksController.text,
-                            itemCode: _itemCodeTypeController.text,
-                          );
-                          addItem(user);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Home(),
-                            ),
-                          );
-                        } else{
-                          showDialog(
+                      if (_itemNameController.text.isNotEmpty &&
+                          _categoryController.text.isNotEmpty &&
+                          _itemUnitController.text.isNotEmpty &&
+                          _sellpriceController.text.isNotEmpty &&
+                          _purchaseController.text.isNotEmpty &&
+                          _stockQuantityTypeController.text.isNotEmpty) {
+                        addItem();
+                      } else {
+                        showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: const Text('Field Empty'),
-                              content: const
-                                  Text('Please fill all the fields.'),
+                              content:
+                                  const Text('Please fill all the fields.'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -351,8 +453,8 @@ class _AddNewItemState extends State<AddNewItem> {
                               ],
                             );
                           },
-                          );
-                        }
+                        );
+                      }
                     },
                     icon: const Icon(Icons.save, color: Colors.white),
 
@@ -414,54 +516,4 @@ class _AddNewItemState extends State<AddNewItem> {
       ),
     );
   }
-
-  Future addItem(User item) async {
-    try {
-      final docUser = FirebaseFirestore.instance.collection('items').doc(_itemCodeTypeController.text);
-      //_nameController.text = docUser.id;
-      final json = item.toJson();
-      await docUser.set(json);
-      print('User added successfully!');
-    } catch (e) {
-      print('Error adding user: $e');
-    }
-  }
-}
-
-class User {
-  final String name;
-  final String unit;
-  final String category;
-  final int sellingPrice;
-  final int purchasePrice;
-  final int stockQuantity;
-  final String date;
-  final String location;
-  final String remarks;
-  final String itemCode;
-
-  User({
-    required this.itemCode,
-    required this.name,
-    required this.location,
-    required this.unit,
-    required this.date,
-    required this.sellingPrice,
-    required this.purchasePrice,
-    required this.stockQuantity,
-    required this.remarks,
-    required this.category,
-  });
-  Map<String, dynamic> toJson() => {
-        'itemCode': itemCode,
-        'name': name,
-        'location': location,
-        'unit': unit,
-        'date': date,
-        'sellingPrice': sellingPrice,
-        'purchasePrice': purchasePrice,
-        'stockQuantity': stockQuantity,
-        'remarks': remarks,
-        'category': category,
-      };
 }

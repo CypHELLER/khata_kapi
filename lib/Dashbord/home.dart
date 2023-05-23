@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:khatakapi/Dashbord/purchases.dart';
+import 'package:khatakapi/Dashbord/recentExpenses.dart';
 import 'package:khatakapi/Dashbord/settings.dart';
-import 'package:khatakapi/Dashbord/transactions.dart';
 import '../Sales/sales.dart';
 import 'customers.dart';
 import 'floatingbuttonadd.dart';
 import 'inventory.dart';
-import 'reminders.dart';
 import 'suppliers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,13 +18,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String uID = "";
   final TextEditingController _nameController = TextEditingController();
 
   Future<void> _fetchData() async {
-    final userDoc =
-        FirebaseFirestore.instance.collection('users').doc('details');
+    uID = _auth.currentUser?.phoneNumber ?? 'phone';
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(uID);
 
     final snapshot = await userDoc.get();
 
@@ -45,7 +45,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _fetchData();
-
   }
 
   @override
@@ -57,19 +56,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           width: 80,
         ),
         backgroundColor: const Color.fromARGB(255, 148, 121, 163),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                Icons.language,
-                size: 26.0,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -91,16 +77,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                ),
-              ),
-              currentAccountPicture: CircleAvatar(
-                radius: 36,
-                backgroundColor: Colors.transparent,
-                child: ClipOval(
-                  child: Image.asset(
-                    'assets/images/profile.png',
-                    fit: BoxFit.fill,
-                  ),
                 ),
               ),
             ),
@@ -141,16 +117,50 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ListTile(
               iconColor: const Color.fromARGB(255, 148, 121, 163),
               leading: const Icon(
-                Icons.copy,
+                Icons.shopping_cart,
               ),
               title: const Text(
-                'Transactions',
+                'Purchase',
               ),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const Transactions(),
+                    builder: (context) => const Purchases(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              iconColor: const Color.fromARGB(255, 148, 121, 163),
+              leading: const Icon(
+                Icons.shopping_cart_checkout,
+              ),
+              title: const Text(
+                'Purchase Return',
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RecentExpences(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              iconColor: const Color.fromARGB(255, 148, 121, 163),
+              leading: const Icon(
+                Icons.money,
+              ),
+              title: const Text(
+                'Expenses',
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RecentExpences(),
                   ),
                 );
               },
@@ -167,7 +177,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SettingsPage(),
+                    builder: (context) => SettingsPage(isDarkMode: false,),
                   ),
                 );
               },
@@ -198,7 +208,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    
                     const SizedBox(
                       height: 30,
                     ),

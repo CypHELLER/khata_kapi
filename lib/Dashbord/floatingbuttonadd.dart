@@ -255,7 +255,7 @@ class _AddButtonState extends State<AddButton> {
                             color: Colors.white),
 
                         label: const Text(
-                          "Expences",
+                          "Expenses",
                           style: TextStyle(
                             color: Colors.white,
                           ),

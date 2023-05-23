@@ -1,24 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'home.dart';
 
-class Inventory extends StatefulWidget {
-  const Inventory({super.key});
+class RecentExpences extends StatefulWidget {
+  const RecentExpences({super.key});
 
   @override
-  State<Inventory> createState() => _InventoryState();
+  State<RecentExpences> createState() => _RecentExpencesState();
 }
 
-class _InventoryState extends State<Inventory> {
-  String uid = "";
+class _RecentExpencesState extends State<RecentExpences> {
+   String uid = "";
   @override
   void initState() {
     super.initState();
     uid = FirebaseAuth.instance.currentUser!.phoneNumber.toString();
     print(uid);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,7 @@ class _InventoryState extends State<Inventory> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          "Inventory",
+          "Expenses",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ class _InventoryState extends State<Inventory> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.inventory_2,
+              Icons.money,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -47,7 +47,7 @@ class _InventoryState extends State<Inventory> {
       ),
       body: StreamBuilder(
         stream:
-            FirebaseFirestore.instance.collection("items").doc(uid).snapshots(),
+            FirebaseFirestore.instance.collection("expenses").doc(uid).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -67,8 +67,8 @@ class _InventoryState extends State<Inventory> {
           if (snapshot.data!.exists) {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
-            if (data.containsKey("items")) {
-              List<dynamic> dataList = data["items"];
+            if (data.containsKey("expenses")) {
+              List<dynamic> dataList = data["expenses"];
               if (dataList.isEmpty) {
                 return Center(
                   child: Text("No data"),
@@ -89,8 +89,9 @@ class _InventoryState extends State<Inventory> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: ListTile(
-                        title: Text(dataList[index]["name"]),
-                        subtitle: Text(dataList[index]["category"]),
+                        title: Text(dataList[index]["type"]),
+                        subtitle: Text(
+                            dataList[index]["date"]),
                         //Text(transactionType + " Rs. " + openingBlc.toString()),
                         trailing: const Icon(Icons.arrow_forward),
                         onTap: () {
@@ -98,20 +99,13 @@ class _InventoryState extends State<Inventory> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ItemsPage(
-                                itemName: dataList[index]["name"],
-                                itemCategory: dataList[index]["category"],
-                                stockQuantity: int.parse(
-                                    dataList[index]["quantity"].toString()),
-                                itemCode: dataList[index]["itemCode"],
+                              builder: (context) => NextPage(
+                                name: dataList[index]["type"],
+                                remarks: dataList[index]
+                                    ["remarks"],
+                                amount: int.parse(
+                                    dataList[index]["amount"].toString()),
                                 date: dataList[index]["date"],
-                                itemLocation: dataList[index]["location"],
-                                purchasePrice:
-                                    int.parse(dataList[index]["purchasePrice"]),
-                                sellingPrice: int.parse(
-                                    dataList[index]["sellingPrice"].toString()),
-                                remarks: dataList[index]["remarks"],
-                                itemUnit: dataList[index]["unit"],
                               ),
                             ),
                           );
@@ -124,7 +118,7 @@ class _InventoryState extends State<Inventory> {
             }
           }
           return Center(
-            child: Text("No Items found"),
+            child: Text("No Expenses found"),
           );
         },
       ),
@@ -132,30 +126,18 @@ class _InventoryState extends State<Inventory> {
   }
 }
 
-class ItemsPage extends StatelessWidget {
-  final String itemName;
-  final String itemCategory;
-  final String itemCode;
-  final String itemUnit;
-  final int purchasePrice;
+class NextPage extends StatelessWidget {
+  final String name;
   final String remarks;
-  final int sellingPrice;
-  final int stockQuantity;
-  final String itemLocation;
+  final int amount;
   final String date;
 
-  const ItemsPage({
+  const NextPage({
     super.key,
-    required this.itemName,
-    required this.itemCategory,
-    required this.itemCode,
-    required this.itemUnit,
-    required this.purchasePrice,
+    required this.name,
     required this.remarks,
+    required this.amount,
     required this.date,
-    required this.sellingPrice,
-    required this.stockQuantity,
-    required this.itemLocation,
   });
 
   @override
@@ -163,7 +145,7 @@ class ItemsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Item Details",
+          "Expense Details",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -172,7 +154,7 @@ class ItemsPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.person,
+              Icons.money,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -189,53 +171,14 @@ class ItemsPage extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 35),
-              textFieldMethod("Item Category: ", itemCategory, false),
-              textFieldMethod("Item Code: ", itemCode, false),
-              textFieldMethod("Item Location: ", itemLocation, true),
-              textFieldMethod("Item Name: ", itemName, false),
-              textFieldMethod("Item Unit: ", itemUnit, false),
-              textFieldMethod(
-                  "Purchase Price: ", purchasePrice.toString(), false),
-              textFieldMethod(
-                  "Selling Price: ", sellingPrice.toString(), false),
-              textFieldMethod(
-                  "Stock Quantity: ", stockQuantity.toString(), false),
-              textFieldMethod("Remarks: ", remarks, false),
+              textFieldMethod("Name", name, false),
+              textFieldMethod("Amount", amount.toString(), false),
+              textFieldMethod("Date", date, false),
+              textFieldMethod("Remarks", remarks, false),
               const SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: 150,
-                    height: 45,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        // ignore: deprecated_member_use
-                        backgroundColor: Colors.red,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Home(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.cancel,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        "Clear",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 35),
                   SizedBox(
                     width: 150,
@@ -260,7 +203,7 @@ class ItemsPage extends StatelessWidget {
                         color: Colors.white,
                       ),
                       label: const Text(
-                        "Save",
+                        "Ok",
                         style: TextStyle(
                           color: Colors.white,
                         ),

@@ -1,45 +1,26 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../Language/language.dart';
 import 'editprofile.dart';
-
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final bool isDarkMode;
 
+  const SettingsPage({required this.isDarkMode});
   @override
   State<SettingsPage> createState() => SettingsPageState();
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  late bool isDarkMode = false;
-  // ignore: constant_identifier_names
-  static const String MODE = 'isDarkMode';
+  bool _isDarkMode = false;
 
   @override
   void initState() {
     super.initState();
-    getThemeMode();
+    _isDarkMode = widget.isDarkMode;
   }
-
-  Future<void> getThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isDarkMode = prefs.getBool(MODE) ?? false;
-    });
-  }
-
-  Future<void> setThemeMode(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(MODE, value);
-    setState(() {
-      isDarkMode = value;
-    });
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +73,7 @@ class SettingsPageState extends State<SettingsPage> {
                         onPressed: () {},
                       ),
                       const Text(
-                        'Switch Mode',
+                        'Switch Language',
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
@@ -102,9 +83,11 @@ class SettingsPageState extends State<SettingsPage> {
                         height: 5,
                       ),
                       Switch(
-                        value: isDarkMode,
+                        value: _isDarkMode,
                         onChanged: (value) {
-                          setThemeMode(value);
+                          setState(() {
+                            _isDarkMode = value;
+                          });
                         },
                       ),
                       const SizedBox(

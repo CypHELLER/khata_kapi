@@ -12,21 +12,6 @@ class OtpNep extends StatefulWidget {
 class _OtpNepState extends State<OtpNep> {
   @override
   Widget build(BuildContext context) {
-    final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 56,
-      textStyle: const TextStyle(
-          fontSize: 20,
-          color: Color.fromRGBO(30, 60, 87, 1),
-          fontWeight: FontWeight.w600),
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color.fromRGBO(234, 239, 243, 1)),
-        borderRadius: BorderRadius.circular(20),
-      ),
-    );
-
-
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -88,7 +73,7 @@ class _OtpNepState extends State<OtpNep> {
                 height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.green.shade600,
+                      backgroundColor: Colors.green.shade600,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
                   onPressed: () {

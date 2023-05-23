@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../Dashbord/home.dart';
 
@@ -21,12 +24,85 @@ class Expense extends StatefulWidget {
 }
 
 class _ExpenseState extends State<Expense> {
+  String uID = "";
   String dropdownvalue = billType.first;
-
   final TextEditingController _expTypeController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
-  final TextEditingController __remarksController = TextEditingController();
+  final TextEditingController _remarksController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getdata();
+  }
+
+  void getdata() {
+    uID = (FirebaseAuth.instance.currentUser!.phoneNumber).toString();
+    print(uID);
+  }
+
+  Future createBill() async {
+    try {
+      final docUser =
+          FirebaseFirestore.instance.collection("expenses").doc(uID);
+      await docUser.update({
+        "expenses": FieldValue.arrayUnion([
+          {
+            'type': _expTypeController.text,
+            'amount': int.parse(_amountController.text),
+            'date': _dateController.text,
+            'remarks': _remarksController.text,
+          }
+        ]),
+      }).then(
+        (value) => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        ),
+      );
+
+      print('User added successfully!');
+    } on FirebaseException catch (e) {
+      if (e.code == "not-found") {
+        await FirebaseFirestore.instance.collection("expenses").doc(uID).set({
+          "expenses": FieldValue.arrayUnion([
+            {
+              'type': _expTypeController.text,
+              'amount': int.parse(_amountController.text),
+              'date': _dateController.text,
+              'remarks': _remarksController.text,
+            }
+          ]),
+        }).then(
+          (value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ),
+          ),
+        );
+      }
+      print('Error adding user: $e');
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +112,7 @@ class _ExpenseState extends State<Expense> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          "Expences Bill",
+          "Expenses Bill",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -88,7 +164,7 @@ class _ExpenseState extends State<Expense> {
                 ),
               ),
             ),
-             Container(
+            Container(
               padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
               child: TextField(
                 controller: _amountController,
@@ -129,9 +205,49 @@ class _ExpenseState extends State<Expense> {
                 ),
               ),
             ),
-            textFieldMethod("Remarks", __remarksController),
-            textFieldMethod("Date", _dateController),
-            
+            textFieldMethod("Remarks", _remarksController),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
+              child: GestureDetector(
+                child: TextField(
+                    controller: _dateController,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    cursorColor: Colors.blue, // Customize the cursor color
+                    decoration: InputDecoration(
+                      labelText: "Date",
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 16.0), // Adjust the content padding
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black.withOpacity(0.6),
+                      ),
+                    ),
+                    readOnly: true,
+                    onTap: () => {
+                          _selectDate(context),
+                        }),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -171,12 +287,29 @@ class _ExpenseState extends State<Expense> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Home(),
-                        ),
-                      );
+                      if (_expTypeController.text.isNotEmpty &&
+                          _amountController.text.isNotEmpty) {
+                        createBill();
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Field Empty'),
+                              content:
+                                  const Text('Please fill all the fields.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                     },
                     icon: const Icon(Icons.save, color: Colors.white),
 
@@ -199,7 +332,7 @@ class _ExpenseState extends State<Expense> {
     );
   }
 
-Padding textFieldMethod(String labelText, TextEditingController controller) {
+  Padding textFieldMethod(String labelText, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
       child: TextField(

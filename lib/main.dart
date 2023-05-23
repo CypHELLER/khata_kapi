@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: mode.isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      theme: ThemeData.light(),
       home: AnimatedSplashScreen(
         splash: Image.asset('assets/images/logo.png'),
         nextScreen: const Language(),

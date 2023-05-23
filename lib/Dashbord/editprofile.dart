@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,18 @@ class _EditProfileState extends State<EditProfile> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
+  String uID = "";
 
   @override
   void initState() {
     super.initState();
+    getdata();
     _fetchProfileData();
+  }
+
+  void getdata() {
+    uID = (FirebaseAuth.instance.currentUser!.phoneNumber).toString();
+    print(uID);
   }
 
   @override
@@ -34,8 +42,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> _fetchProfileData() async {
-    final userDoc =
-        FirebaseFirestore.instance.collection('users').doc('details');
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(uID);
 
     final snapshot = await userDoc.get();
 
@@ -93,55 +100,6 @@ class _EditProfileState extends State<EditProfile> {
           child: Column(
             children: [
               const SizedBox(height: 15),
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 4,
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity(0.1),
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                        shape: BoxShape.circle,
-                        image: const DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage("assets/images/logo.png"),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 4,
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                          ),
-                          color: const Color.fromARGB(255, 148, 121, 163),
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(height: 35),
               textFieldMethod("Full Name", _nameController, true),
               textFieldMethod("Phone", _phoneController, false),
@@ -222,49 +180,52 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Padding textFieldMethod(String labelText, TextEditingController controller,bool editable) {
+  Padding textFieldMethod(
+      String labelText, TextEditingController controller, bool editable) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
       child: TextField(
-      controller: controller,
-      enabled: editable,
-      style: const TextStyle(
-        fontSize: 16,
-        color: Colors.black,
-      ),
-      cursorColor: Colors.blue, // Customize the cursor color
-      decoration: InputDecoration(
-        labelText: labelText,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0), // Adjust the content padding
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.blue),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        filled: true,
-        fillColor: Colors.grey.shade200,
-        hintStyle: TextStyle(
+        controller: controller,
+        enabled: editable,
+        style: const TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.black,
         ),
-        suffixIcon: editable ? const Icon(Icons.edit, color: Colors.blue) : null, // Add an edit icon as suffix if editable
+        cursorColor: Colors.blue, // Customize the cursor color
+        decoration: InputDecoration(
+          labelText: labelText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          contentPadding: const EdgeInsets.symmetric(
+              vertical: 10.0, horizontal: 16.0), // Adjust the content padding
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.blue),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade200,
+          hintStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          suffixIcon: editable
+              ? const Icon(Icons.edit, color: Colors.blue)
+              : null, // Add an edit icon as suffix if editable
+        ),
       ),
-    ),
     );
   }
 
   Future<void> _updateProfileData() async {
-    final userRef =
-        FirebaseFirestore.instance.collection('users').doc('details');
+    final userRef = FirebaseFirestore.instance.collection('users').doc(uID);
 
     await userRef.update({
       'name': _nameController.text,

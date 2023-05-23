@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:intl/intl.dart';
 import '../Dashbord/home.dart';
+import '../selectItem.dart';
 
 const List<String> billType = <String>[
   "Select Bill Type",
@@ -18,6 +20,7 @@ class PurchaseItem extends StatefulWidget {
 }
 
 class PurchaseItemState extends State<PurchaseItem> {
+  String uID = "";
   String dropdownvalue = billType.first;
   final TextEditingController billNoController = TextEditingController();
   final TextEditingController _billTypeController = TextEditingController();
@@ -27,12 +30,107 @@ class PurchaseItemState extends State<PurchaseItem> {
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _rateController = TextEditingController();
   final TextEditingController _discountController = TextEditingController();
-  final TextEditingController _discountPercentController =
-      TextEditingController();
+
+  @override
+  void dispose() {
+    _quantityController.removeListener(updateTotalBill);
+    _rateController.removeListener(updateTotalBill);
+    _discountController.removeListener(updateTotalBill);
+    super.dispose();
+  }
+
+  void updateTotalBill() {
+    final quantity = int.tryParse(_quantityController.text) ?? 0;
+    final rate = int.tryParse(_rateController.text) ?? 0;
+    final discount = int.tryParse(_discountController.text) ?? 0;
+
+    final totalBill = (rate * quantity) - discount;
+    _totalBillController.text = totalBill.toString();
+  }
+
+  void addToBill() {
+    updateTotalBill();
+    Navigator.pop(context);
+  }
 
   @override
   void initState() {
     super.initState();
+    getdata();
+  }
+
+  void getdata() {
+    uID = (FirebaseAuth.instance.currentUser!.phoneNumber).toString();
+    print(uID);
+  }
+
+  Future createBill() async {
+    try {
+      final docUser =
+          FirebaseFirestore.instance.collection("purchase").doc(uID);
+      await docUser.update({
+        "purchase": FieldValue.arrayUnion([
+          {
+            "quantity": int.parse(_quantityController.text),
+            "rate": int.parse(_rateController.text),
+            "discount": int.parse(_discountController.text),
+            "totalBill": int.parse(_totalBillController.text),
+            "billType": _billTypeController.text,
+            "date": _dateController.text,
+            "remarks": _remarksController.text,
+            "billNo": billNoController.text,
+          }
+        ]),
+      }).then(
+        (value) => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        ),
+      );
+
+      print('User added successfully!');
+    } on FirebaseException catch (e) {
+      if (e.code == "not-found") {
+        await FirebaseFirestore.instance.collection("purchase").doc(uID).set({
+          "purchase": FieldValue.arrayUnion([
+            {
+              "quantity": int.parse(_quantityController.text),
+              "rate": int.parse(_rateController.text),
+              "discount": int.parse(_discountController.text),
+              "totalBill": int.parse(_totalBillController.text),
+              "billType": _billTypeController.text,
+              "date": _dateController.text,
+              "remarks": _remarksController.text,
+              "billNo": billNoController.text,
+            }
+          ]),
+        }).then(
+          (value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ),
+          ),
+        );
+      }
+      print('Error adding user: $e');
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
   }
 
   @override
@@ -69,7 +167,48 @@ class PurchaseItemState extends State<PurchaseItem> {
               height: 30,
             ),
             textFieldMethod("Bill No.", billNoController),
-            textFieldMethod("Date", _dateController),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
+              child: GestureDetector(
+                child: TextField(
+                    controller: _dateController,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    cursorColor: Colors.blue, // Customize the cursor color
+                    decoration: InputDecoration(
+                      labelText: "Date",
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 16.0), // Adjust the content padding
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black.withOpacity(0.6),
+                      ),
+                    ),
+                    readOnly: true,
+                    onTap: () => {
+                          _selectDate(context),
+                        }),
+              ),
+            ),
             Container(
               padding: const EdgeInsets.only(left: 30, bottom: 35.0, right: 30),
               child: DropdownButtonHideUnderline(
@@ -104,7 +243,7 @@ class PurchaseItemState extends State<PurchaseItem> {
               padding: const EdgeInsets.only(right: 25.0, left: 25.0),
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
+                    backgroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5))),
                 onPressed: () {
@@ -119,13 +258,18 @@ class PurchaseItemState extends State<PurchaseItem> {
                             children: [
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.blue,
+                                  backgroundColor: Colors.blue,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                 ),
                                 onPressed: () {
-                                  // Handle "Select Item" button click
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SelectItem(),
+                                    ),
+                                  );
                                 },
                                 icon: const Icon(Icons.inventory_rounded,
                                     color: Colors.white),
@@ -226,51 +370,6 @@ class PurchaseItemState extends State<PurchaseItem> {
                               ),
                               const SizedBox(height: 20),
                               TextField(
-                                controller: _discountPercentController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
-                                cursorColor:
-                                    Colors.blue, // Customize the cursor color
-                                decoration: InputDecoration(
-                                  labelText: 'Discount %',
-                                  floatingLabelBehavior:
-                                      FloatingLabelBehavior.always,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10.0,
-                                      horizontal:
-                                          16.0), // Adjust the content padding
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        const BorderSide(color: Colors.blue),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey.shade200,
-                                  hintStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black.withOpacity(0.6),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              TextField(
                                 controller: _discountController,
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
@@ -319,12 +418,7 @@ class PurchaseItemState extends State<PurchaseItem> {
                         ),
                         actions: [
                           ElevatedButton(
-                            onPressed: () {
-                              // Validate inputs and handle "Add" button click
-                              // You can perform input validation here and show error messages if needed
-                              // If inputs are valid, add the item and close the dialog
-                              // If inputs are not valid, show error messages or prevent the dialog from closing
-                            },
+                            onPressed: addToBill,
                             child: const Text('Add'),
                           ),
                           ElevatedButton(
@@ -355,10 +449,7 @@ class PurchaseItemState extends State<PurchaseItem> {
               padding: const EdgeInsets.only(left: 16, bottom: 35.0, right: 16),
               child: TextField(
                 controller: _totalBillController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                enabled: false,
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black,
@@ -404,7 +495,7 @@ class PurchaseItemState extends State<PurchaseItem> {
                   height: 45,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
+                        backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () {
@@ -430,27 +521,14 @@ class PurchaseItemState extends State<PurchaseItem> {
                   height: 45,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.green.shade600,
+                        backgroundColor: Colors.green.shade600,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () {
                       if (_totalBillController.text.isNotEmpty &&
                           _billTypeController.text.isNotEmpty &&
                           _dateController.text.isNotEmpty) {
-                        final user = User(
-                          totalBill: int.parse(_totalBillController.text),
-                          billType: _billTypeController.text,
-                          date: _dateController.text,
-                          remarks: _remarksController.text,
-                          billNo: billNoController.text,
-                        );
-                        createPurchaseBill(user);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Home(),
-                          ),
-                        );
+                        createBill();
                       } else {
                         showDialog(
                           context: context,
@@ -531,41 +609,4 @@ class PurchaseItemState extends State<PurchaseItem> {
       ),
     );
   }
-
-  Future createPurchaseBill(User item) async {
-    try {
-      final docUser = FirebaseFirestore.instance
-          .collection('purchase')
-          .doc(billNoController.text);
-      //_nameController.text = docUser.id;
-      final json = item.toJson();
-      await docUser.set(json);
-      print('User added successfully!');
-    } catch (e) {
-      print('Error adding user: $e');
-    }
-  }
-}
-
-class User {
-  final String billNo;
-  final String billType;
-  final int totalBill;
-  final String date;
-  final String remarks;
-
-  User({
-    required this.billNo,
-    required this.billType,
-    required this.totalBill,
-    required this.date,
-    required this.remarks,
-  });
-  Map<String, dynamic> toJson() => {
-        'billNo': billNo,
-        'billType': billType,
-        'totalBill': totalBill,
-        'date': date,
-        'remarks': remarks,
-      };
 }
