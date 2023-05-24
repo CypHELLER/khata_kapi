@@ -370,7 +370,7 @@ class _NewPartyState extends State<NewParty> {
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () {
                       String phoneNumber = _phoneController.text;
-                      if (phoneNumber.length == 1) {
+                      if (phoneNumber.length == 10) {
                         if (_nameController.text.isNotEmpty &&
                             _addressController.text.isNotEmpty &&
                             _phoneController.text.isNotEmpty &&

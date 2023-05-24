@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:khatakapi/Dashbord/purchaseReturns.dart';
 import 'package:khatakapi/Dashbord/purchases.dart';
 import 'package:khatakapi/Dashbord/recentExpenses.dart';
+import 'package:khatakapi/Dashbord/salesReturns.dart';
 import 'package:khatakapi/Dashbord/settings.dart';
 import '../Sales/sales.dart';
 import 'customers.dart';
@@ -143,7 +145,24 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const RecentExpences(),
+                    builder: (context) => const PurchaseReturns(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              iconColor: const Color.fromARGB(255, 148, 121, 163),
+              leading: const Icon(
+                Icons.outbox,
+              ),
+              title: const Text(
+                'Sales Return',
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SalesReturns(),
                   ),
                 );
               },
@@ -177,7 +196,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SettingsPage(isDarkMode: false,),
+                    builder: (context) => SettingsPage(
+                      isDarkMode: false,
+                    ),
                   ),
                 );
               },
@@ -277,64 +298,75 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     const SizedBox(
                       height: 25,
                     ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: SizedBox(
-                          height: 1000,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: 10,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                padding: const EdgeInsets.only(
-                                    left: 20, top: 20, right: 20),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        height: 75,
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              bottomRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
-                                              bottomLeft: Radius.circular(10)),
-                                          color: Colors.white,
+                    Flexible(
+                      child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("transactions")
+                            .doc(uID)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          if (!snapshot.hasData) {
+                            return const Center(
+                              child: Text("No Data Found"),
+                            );
+                          }
+                          if (snapshot.data!.exists) {
+                            Map<String, dynamic> data =
+                                snapshot.data!.data() as Map<String, dynamic>;
+                            if (data.containsKey("sales")) {
+                              List<dynamic> dataList = data["sales"];
+                              if (dataList.isEmpty) {
+                                return Center(
+                                  child: Text("No data"),
+                                );
+                              }
+                              return ListView.builder(
+                                itemCount: dataList.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10,
+                                        left: 16,
+                                        bottom: 10,
+                                        right: 16),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.green,
+                                          width: 2.0,
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          child: Column(
-                                            children: const [
-                                              SizedBox(height: 10),
-                                              Text(
-                                                "Recent Transaction",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18.0,
-                                                ),
-                                              ),
-                                              SizedBox(height: 10),
-                                              Text(
-                                                "Details",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      child: ListTile(
+                                        title:
+                                            Text(dataList[index]["billType"]),
+                                        subtitle: Text(dataList[index]["date"]),
+                                        trailing: Text(
+                                            " Rs ${dataList[index]["totalBill"]}"),
+                                        onTap: () {},
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  );
+                                },
                               );
-                            },
-                          ),
-                        ),
+                            }
+                          }
+                          return Center(
+                            child: Text(""),
+                          );
+                        },
                       ),
                     ),
                   ],

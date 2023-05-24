@@ -143,7 +143,7 @@ class _LoginEngState extends State<LoginEng> {
                   onPressed: () async {
                     if (number.length == 10) {
                       await FirebaseAuth.instance.verifyPhoneNumber(
-                        phoneNumber: countryController.text + number,
+                        phoneNumber: '${countryController.text + number}',
                         verificationCompleted:
                             (PhoneAuthCredential credential) {},
                         verificationFailed: (FirebaseAuthException e) {},

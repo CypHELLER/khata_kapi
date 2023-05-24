@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'home.dart';
 
-class RecentExpences extends StatefulWidget {
-  const RecentExpences({super.key});
+class SalesReturns extends StatefulWidget {
+  const SalesReturns({super.key});
 
   @override
-  State<RecentExpences> createState() => _RecentExpencesState();
+  State<SalesReturns> createState() => _SalesReturnsState();
 }
 
-class _RecentExpencesState extends State<RecentExpences> {
+class _SalesReturnsState extends State<SalesReturns> {
    String uid = "";
   @override
   void initState() {
@@ -28,7 +27,7 @@ class _RecentExpencesState extends State<RecentExpences> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          "Expenses",
+          "Sales Returns",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -37,7 +36,7 @@ class _RecentExpencesState extends State<RecentExpences> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.shopping_cart_checkout,
+              Icons.outbox,
               color: Colors.white,
             ),
             onPressed: () {},
@@ -47,7 +46,7 @@ class _RecentExpencesState extends State<RecentExpences> {
       ),
       body: StreamBuilder(
         stream:
-            FirebaseFirestore.instance.collection("expenses").doc(uid).snapshots(),
+            FirebaseFirestore.instance.collection("transactions").doc(uid).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -67,8 +66,8 @@ class _RecentExpencesState extends State<RecentExpences> {
           if (snapshot.data!.exists) {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
-            if (data.containsKey("expenses")) {
-              List<dynamic> dataList = data["expenses"];
+            if (data.containsKey("salesReturn")) {
+              List<dynamic> dataList = data["salesReturn"];
               if (dataList.isEmpty) {
                 return Center(
                   child: Text("No data"),
@@ -118,7 +117,7 @@ class _RecentExpencesState extends State<RecentExpences> {
             }
           }
           return Center(
-            child: Text("No Expenses found"),
+            child: Text("No Data found"),
           );
         },
       ),
@@ -145,7 +144,7 @@ class NextPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Expense Details",
+          "Sales Return Details",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -154,7 +153,7 @@ class NextPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.money,
+              Icons.outbox,
               color: Colors.white,
             ),
             onPressed: () {},

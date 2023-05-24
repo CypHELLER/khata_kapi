@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../Dashbord/home.dart';
-import '../selectItem.dart';
+import '../Dashbord/selectItem.dart';
 
 const List<String> billType = <String>[
   "Select Bill Type",
@@ -30,7 +30,7 @@ class PurchaseReturnState extends State<PurchaseReturn> {
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _rateController = TextEditingController();
   final TextEditingController _discountController = TextEditingController();
-
+  var quantity;
   @override
   void dispose() {
     _quantityController.removeListener(updateTotalBill);
@@ -67,7 +67,7 @@ class PurchaseReturnState extends State<PurchaseReturn> {
   Future createBill() async {
     try {
       final docUser =
-          FirebaseFirestore.instance.collection("purchaseReturn").doc(uID);
+          FirebaseFirestore.instance.collection("transactions").doc(uID);
       await docUser.update({
         "purchaseReturn": FieldValue.arrayUnion([
           {
@@ -94,7 +94,7 @@ class PurchaseReturnState extends State<PurchaseReturn> {
     } on FirebaseException catch (e) {
       if (e.code == "not-found") {
         await FirebaseFirestore.instance
-            .collection("purchaseReturn")
+            .collection("transactions")
             .doc(uID)
             .set({
           "purchaseReturn": FieldValue.arrayUnion([
@@ -532,6 +532,7 @@ class PurchaseReturnState extends State<PurchaseReturn> {
                           _billTypeController.text.isNotEmpty &&
                           _dateController.text.isNotEmpty) {
                         createBill();
+                        _updateData();
                       } else {
                         showDialog(
                           context: context,
@@ -611,5 +612,42 @@ class PurchaseReturnState extends State<PurchaseReturn> {
         ),
       ),
     );
+  }
+
+  // Function to update the quantity based on a matching name
+  Future<void> _updateData() async {
+    try {
+      // Retrieve the document from Firestore
+      DocumentSnapshot snapshot =
+          await FirebaseFirestore.instance.collection('items').doc(uID).get();
+
+      if (snapshot.exists) {
+        // Get the array field value from the document
+        List<dynamic> items = snapshot.get('items');
+
+        // Find the index of the item with the matching name
+        int index = items.indexWhere((item) => item['name'] == 'Chow Chow');
+
+        if (index != -1) {
+          // Update the quantity of the item at the matching index
+          items[index]['quantity'] =
+              quantity - int.parse(_quantityController.text);
+
+          // Update the document in Firestore
+          await FirebaseFirestore.instance
+              .collection('items')
+              .doc(uID)
+              .update({'items': items});
+
+          print('Item quantity updated successfully.');
+        } else {
+          print('Item with name not found.');
+        }
+      } else {
+        print('Document not found.');
+      }
+    } catch (e) {
+      print('Error updating item quantity: $e');
+    }
   }
 }

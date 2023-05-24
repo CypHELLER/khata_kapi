@@ -78,19 +78,9 @@ class LanguageState extends State<Language> {
             Image.asset(
               alignment: Alignment.center,
               'assets/images/logo.png',
-              height: 300,
+              height: 400,
               width: 200,
               fit: BoxFit.fitWidth,
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 50, top: 250),
-              child: const Text(
-                'भाषा छनोट गर्नुहोस।\nPlease Choose your language',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 23,
-                ),
-              ),
             ),
             Container(
               padding: const EdgeInsets.only(left: 150, top: 370),
@@ -102,7 +92,7 @@ class LanguageState extends State<Language> {
                   ),
                 ),
                 child: const Text(
-                  'English',
+                  'Start',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -113,30 +103,6 @@ class LanguageState extends State<Language> {
                   checkIfLoggedIn();
                   check = "0";
                   Colors.grey;
-                },
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 155, top: 450),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  'नेपाली',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
-                ),
-                onPressed: () {
-                  checkIfLoggedIn();
-                  Colors.grey;
-                  check = "1";
                 },
               ),
             ),

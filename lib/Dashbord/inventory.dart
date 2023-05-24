@@ -107,7 +107,7 @@ class _InventoryState extends State<Inventory> {
                                 date: dataList[index]["date"],
                                 itemLocation: dataList[index]["location"],
                                 purchasePrice:
-                                    int.parse(dataList[index]["purchasePrice"]),
+                                    int.parse(dataList[index]["purchasePrice"].toString()),
                                 sellingPrice: int.parse(
                                     dataList[index]["sellingPrice"].toString()),
                                 remarks: dataList[index]["remarks"],
@@ -191,7 +191,7 @@ class ItemsPage extends StatelessWidget {
               const SizedBox(height: 35),
               textFieldMethod("Item Category: ", itemCategory, false),
               textFieldMethod("Item Code: ", itemCode, false),
-              textFieldMethod("Item Location: ", itemLocation, true),
+              textFieldMethod("Item Location: ", itemLocation, false),
               textFieldMethod("Item Name: ", itemName, false),
               textFieldMethod("Item Unit: ", itemUnit, false),
               textFieldMethod(
@@ -217,6 +217,7 @@ class ItemsPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
+                        deleteData();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -260,7 +261,7 @@ class ItemsPage extends StatelessWidget {
                         color: Colors.white,
                       ),
                       label: const Text(
-                        "Save",
+                        "Ok",
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -319,3 +320,26 @@ class ItemsPage extends StatelessWidget {
     );
   }
 }
+
+  Future<void> deleteData() async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.phoneNumber.toString();
+      // Get the reference to the Firestore document
+      final DocumentReference documentRef =
+          FirebaseFirestore.instance.collection('party').doc(uid);
+      // Delete the document
+      await documentRef.delete();
+      await SnackBar(
+        content: const Text('Account Deleted'),
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.grey[700],
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        width: 280.0,
+      );
+    } catch (e) {
+      print('Error deleting data: $e');
+    }
+  }

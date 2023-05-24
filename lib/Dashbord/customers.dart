@@ -12,13 +12,14 @@ class Customers extends StatefulWidget {
 }
 
 class _CustomersState extends State<Customers> {
-   String uid = "";
+  String uid = "";
   @override
   void initState() {
     super.initState();
     uid = FirebaseAuth.instance.currentUser!.phoneNumber.toString();
     print(uid);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,6 +200,7 @@ class NextPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
+                        deleteData();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -230,6 +232,7 @@ class NextPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
+                        updateData();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -257,6 +260,49 @@ class NextPage extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> deleteData() async {
+    try {
+      String uid=FirebaseAuth.instance.currentUser!.phoneNumber.toString();
+      // Get the reference to the Firestore document
+      final DocumentReference documentRef =
+      FirebaseFirestore.instance.collection('party').doc(uid);
+      // Delete the document
+      await documentRef.delete();
+        await  SnackBar(
+            content: const Text('Account Deleted'),
+            duration: const Duration(seconds: 2),
+            backgroundColor: Colors.grey[700],
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            width: 280.0,
+          );
+        
+    } catch (e) {
+      print('Error deleting data: $e');
+    }
+  }
+Future<void> updateData() async {
+  try {
+     String uid=FirebaseAuth.instance.currentUser!.phoneNumber.toString();
+    // Get the reference to the Firestore document
+    final DocumentReference documentRef = FirebaseFirestore.instance.collection('party').doc(uid);
+
+    // Perform the update using the update() method
+    await documentRef.update({
+      'name': name,
+      'phone': phone,
+      'address':address,
+      'openingBlc':openingBlc,
+      
+      // Add more fields to update as needed
+    });
+  } catch (e) {
+    print('Error updating data: $e');
+  }
+}
 
   Padding textFieldMethod(String labelText, var value, bool editable) {
     return Padding(
