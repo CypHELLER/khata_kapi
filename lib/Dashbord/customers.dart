@@ -179,10 +179,10 @@ class NextPage extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 35),
-              textFieldMethod("Name", name, true),
-              textFieldMethod("Phone", phone.toString(), true),
-              textFieldMethod("Address", address, true),
-              textFieldMethod(transactionType, openingBlc.toString(), true),
+              textFieldMethod("Name", name, false),
+              textFieldMethod("Phone", phone.toString(), false),
+              textFieldMethod("Address", address, false),
+              textFieldMethod(transactionType, openingBlc.toString(), false),
               textFieldMethod("Date", date, false),
               const SizedBox(height: 35),
               Row(
@@ -232,7 +232,8 @@ class NextPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        updateData();
+                       // updateData();
+                        //deleteData();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -245,7 +246,7 @@ class NextPage extends StatelessWidget {
                         color: Colors.white,
                       ),
                       label: const Text(
-                        "Save",
+                        "Ok",
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -284,25 +285,30 @@ class NextPage extends StatelessWidget {
       print('Error deleting data: $e');
     }
   }
-Future<void> updateData() async {
-  try {
-     String uid=FirebaseAuth.instance.currentUser!.phoneNumber.toString();
-    // Get the reference to the Firestore document
-    final DocumentReference documentRef = FirebaseFirestore.instance.collection('party').doc(uid);
+// Future<void> updateData() async {
+//   try {
+//      String uid=FirebaseAuth.instance.currentUser!.phoneNumber.toString();
+//     // Get the reference to the Firestore document
+//     final DocumentReference documentRef = FirebaseFirestore.instance.collection('party').doc(uid);
 
-    // Perform the update using the update() method
-    await documentRef.update({
-      'name': name,
-      'phone': phone,
-      'address':address,
-      'openingBlc':openingBlc,
-      
-      // Add more fields to update as needed
-    });
-  } catch (e) {
-    print('Error updating data: $e');
-  }
-}
+//     // Perform the update using the update() method
+//    Map<String, dynamic> updatedData = {
+//         "Customer": FieldValue.arrayUnion([
+//           {
+//             'name': name,
+//             'phone': phone,
+//             'address': address,
+//             'openingBlc': openingBlc,
+//             'transactionType': transactionType,
+//             'date':date,
+//           }
+//         ]),
+//       };
+//       await documentRef.update(updatedData);
+//   } catch (e) {
+//     print('Error updating data: $e');
+//   }
+// }
 
   Padding textFieldMethod(String labelText, var value, bool editable) {
     return Padding(

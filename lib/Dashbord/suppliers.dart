@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'home.dart';
 
 class Suppliers extends StatefulWidget {
@@ -179,10 +178,10 @@ class NextPage extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 35),
-              textFieldMethod("Name", name, true),
-              textFieldMethod("Phone", phone.toString(), true),
-              textFieldMethod("Address", address, true),
-              textFieldMethod(transactionType, openingBlc.toString(), true),
+              textFieldMethod("Name", name, false),
+              textFieldMethod("Phone", phone.toString(), false),
+              textFieldMethod("Address", address, false),
+              textFieldMethod(transactionType, openingBlc.toString(), false),
               textFieldMethod("Date", date, false),
               const SizedBox(height: 35),
               Row(
@@ -244,7 +243,7 @@ class NextPage extends StatelessWidget {
                         color: Colors.white,
                       ),
                       label: const Text(
-                        "Save",
+                        "Ok",
                         style: TextStyle(
                           color: Colors.white,
                         ),
